@@ -1,0 +1,18 @@
+body {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #fafafa;
+}
+
+html, body {
+	height: 100vh;
+}
+
+.inbox-popup {
+	max-width: 400px !important;
+}
+
+.spacer {
+	flex: 1 1 auto;
+}

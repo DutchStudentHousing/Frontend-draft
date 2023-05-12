@@ -1,0 +1,246 @@
+<div class="filters-header">
+	<h2>General filters</h2>
+	<button mat-icon-button matTooltip="Use my pre-defined filters">
+		<mat-icon>auto_awesome</mat-icon>
+	</button>
+	<button mat-icon-button matTooltip="Reset all filters">
+		<mat-icon>filter_alt_off</mat-icon>
+	</button>
+</div>
+
+<mat-accordion>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Property type
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+		<section class="filters-types">
+			<mat-checkbox formControlName="room">Room</mat-checkbox>
+			<mat-checkbox formControlName="apartment">Apartment</mat-checkbox>
+			<mat-checkbox formControlName="studio">Studio</mat-checkbox>
+			<mat-checkbox formControlName="studio">Anti-squat</mat-checkbox>
+			<mat-checkbox formControlName="student_residence">Student residence</mat-checkbox>
+		</section>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Rent per month
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+		<mat-slider min="500" max="1500" step="50" discrete="true">
+			<input value="750" matSliderStartThumb>
+			<input value="1250" matSliderEndThumb>
+		</mat-slider>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Available surface
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+		<mat-slider min="500" max="1500" step="50" discrete="true">
+			<input value="750" matSliderStartThumb>
+			<input value="1250" matSliderEndThumb>
+		</mat-slider>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>City</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>Rooms</mat-panel-title>
+		</mat-expansion-panel-header>
+		<div class="filters-horizontal">
+			<p>
+				Kitchen
+				<mat-button-toggle-group name="internet">
+					<mat-button-toggle value="own">
+						<mat-icon>face</mat-icon>
+						Own
+					</mat-button-toggle>
+					<mat-button-toggle value="shares">
+						<mat-icon>groups</mat-icon>
+						Shared
+					</mat-button-toggle>
+					<mat-button-toggle value="none">
+						<mat-icon>not_interested</mat-icon>
+						None
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+			</p>
+			<p>
+				Bathroom
+				<mat-button-toggle-group name="bathroom">
+					<mat-button-toggle value="own">
+						<mat-icon>face</mat-icon>
+						Own
+					</mat-button-toggle>
+					<mat-button-toggle value="shares">
+						<mat-icon>groups</mat-icon>
+						Shared
+					</mat-button-toggle>
+					<mat-button-toggle value="none">
+						<mat-icon>not_interested</mat-icon>
+						None
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+			</p>
+			<p>
+				Living room
+				<mat-button-toggle-group name="living_room">
+					<mat-button-toggle value="own">
+						<mat-icon>face</mat-icon>
+						Own
+					</mat-button-toggle>
+					<mat-button-toggle value="shares">
+						<mat-icon>groups</mat-icon>
+						Shared
+					</mat-button-toggle>
+					<mat-button-toggle value="none">
+						<mat-icon>not_interested</mat-icon>
+						None
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+			</p>
+		</div>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>Facilities</mat-panel-title>
+		</mat-expansion-panel-header>
+		<div class="filters-horizontal filters-facilities">
+			<p>
+				Internet
+				<mat-slide-toggle></mat-slide-toggle>
+			</p>
+			<p>
+				Furnished
+				<mat-slide-toggle></mat-slide-toggle>
+			</p>
+			<p>
+				Utilities included
+				<mat-slide-toggle></mat-slide-toggle>
+			</p>
+		</div>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>Rules</mat-panel-title>
+		</mat-expansion-panel-header>
+		<div class="filters-horizontal">
+			<p>
+				Pets allowed
+				<mat-button-toggle-group name="petsAllowed">
+					<mat-button-toggle value="yes">
+						<mat-icon>done</mat-icon>
+						Yes
+					</mat-button-toggle>
+					<mat-button-toggle value="agreement">
+						<mat-icon>question_answer</mat-icon>
+						By agreement
+					</mat-button-toggle>
+					<mat-button-toggle value="no">
+						<mat-icon>not_interested</mat-icon>
+						No
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+			</p>
+			<p>
+				Smoking inside
+				<mat-button-toggle-group name="smokingAllowed">
+					<mat-button-toggle value="yes">
+						<mat-icon>smoking_rooms</mat-icon>
+						Yes
+					</mat-button-toggle>
+					<mat-button-toggle value="agreement">
+						<mat-icon>fire_truck</mat-icon>
+						Not important
+					</mat-button-toggle>
+					<mat-button-toggle value="no">
+						<mat-icon>smoke_free</mat-icon>
+						No
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+			</p>
+		</div>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>Energy label</mat-panel-title>
+		</mat-expansion-panel-header>
+		<mat-button-toggle-group name="energyLabel">
+			<mat-button-toggle value="A">A</mat-button-toggle>
+			<mat-button-toggle value="B">B</mat-button-toggle>
+			<mat-button-toggle value="C">C</mat-button-toggle>
+			<mat-button-toggle value="D">D</mat-button-toggle>
+			<mat-button-toggle value="F">F</mat-button-toggle>
+			<mat-button-toggle value="G">G</mat-button-toggle>
+		</mat-button-toggle-group>
+	</mat-expansion-panel>
+
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>Rentable period</mat-panel-title>
+		</mat-expansion-panel-header>
+
+		<mat-form-field>
+			<input matInput [matDatepicker]="picker" placeholder="Choose a date range">
+			<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+			<mat-datepicker #picker></mat-datepicker>
+		</mat-form-field>
+
+	</mat-expansion-panel>
+</mat-accordion>
+
+<div class="filters-header">
+	<h2>Matching filters</h2>
+</div>
+
+<mat-accordion>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Age
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Gender
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Daytime activity
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Number of people
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+	<mat-expansion-panel>
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Languages
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+	</mat-expansion-panel>
+</mat-accordion>

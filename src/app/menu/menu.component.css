@@ -1,0 +1,18 @@
+.mat-mdc-list-item-meta {
+	align-self: center !important;
+}
+
+.message-list {
+	padding: 6px 0 !important;
+}
+
+.inbox-header {
+	margin: 0 16px 16px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+h2 {
+	margin: 0;
+}

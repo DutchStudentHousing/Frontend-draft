@@ -1,0 +1,9 @@
+mat-dialog-content, form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+mat-stepper {
+	min-width: 750px;
+}

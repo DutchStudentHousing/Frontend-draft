@@ -1,0 +1,75 @@
+<mat-tab-group dynamicHeight>
+	<mat-tab label="Login">
+		<mat-dialog-content>
+			<mat-form-field appearance="outline">
+				<mat-label>Enter your username</mat-label>
+				<input matInput>
+				<mat-icon matSuffix>account_circle</mat-icon>
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+				<mat-label>Enter your password</mat-label>
+				<input matInput [type]="hidePassword ? 'password' : 'text'">
+				<button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+						[attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+					<mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+				</button>
+			</mat-form-field>
+		</mat-dialog-content>
+		<mat-dialog-actions align="end">
+			<button mat-stroked-button mat-dialog-close>Cancel</button>
+			<button mat-flat-button mat-dialog-close color="primary">Login</button>
+		</mat-dialog-actions>
+	</mat-tab>
+	<mat-tab label="Create account">
+		<mat-stepper orientation="horizontal" [linear]="false" labelPosition="bottom" #stepper>
+			<mat-step [stepControl]="firstFormGroup">
+				<form [formGroup]="firstFormGroup">
+					<ng-template matStepLabel>Personal details</ng-template>
+					<mat-form-field appearance="fill">
+						<mat-label>Enter your e-mail</mat-label>
+						<input matInput type="email">
+						<mat-icon matSuffix>mail</mat-icon>
+					</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>Enter your username</mat-label>
+						<input matInput>
+						<mat-icon matSuffix>account_circle</mat-icon>
+					</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>Enter your password</mat-label>
+						<input matInput [type]="hidePassword ? 'password' : 'text'">
+						<button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+								[attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+							<mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+					</mat-form-field>
+					<div>
+						<button mat-button matStepperNext>Next</button>
+					</div>
+				</form>
+			</mat-step>
+			<mat-step [stepControl]="secondFormGroup" optional>
+				<form [formGroup]="secondFormGroup">
+					<ng-template matStepLabel>Tell us about yourself</ng-template>
+					<mat-form-field appearance="fill">
+						<mat-label>Address</mat-label>
+						<input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+							   required>
+					</mat-form-field>
+					<div>
+						<button mat-button matStepperPrevious>Back</button>
+						<button mat-button matStepperNext>Next</button>
+					</div>
+				</form>
+			</mat-step>
+			<mat-step>
+				<ng-template matStepLabel>Done</ng-template>
+				<p>You are now done.</p>
+				<div>
+					<button mat-button matStepperPrevious>Back</button>
+					<button mat-button (click)="stepper.reset()">Reset</button>
+				</div>
+			</mat-step>
+		</mat-stepper>
+	</mat-tab>
+</mat-tab-group>

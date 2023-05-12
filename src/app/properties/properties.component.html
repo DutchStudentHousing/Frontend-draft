@@ -1,0 +1,41 @@
+<div class="properties-header">
+	<h1>Search results</h1>
+
+	<mat-form-field style="margin-bottom: -1.25em;" appearance="outline">
+		<mat-label>Sort on</mat-label>
+		<mat-select value="added">
+			<mat-option value="name">Name</mat-option>
+			<mat-option value="added">Date added</mat-option>
+			<mat-option value="rent">Rent</mat-option>
+			<mat-option value="rent">Surface</mat-option>
+			<mat-option value="rentSurface">Rent per square metre</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<mat-button-toggle-group name="asc-desc" aria-label="Sort">
+		<mat-button-toggle value="asc" (click)="toggleIcon()">
+			<mat-icon>{{ icon }}</mat-icon>
+			<mat-icon>sort</mat-icon>
+		</mat-button-toggle>
+	</mat-button-toggle-group>
+
+	<mat-button-toggle-group name="viewToggle" aria-label="Select view mode">
+		<mat-button-toggle value="red">
+			<mat-icon>apps</mat-icon>
+			Grid view
+		</mat-button-toggle>
+		<mat-button-toggle value="green">
+			<mat-icon>map</mat-icon>
+			Map view
+		</mat-button-toggle>
+	</mat-button-toggle-group>
+</div>
+
+<div class="mat-card-container">
+	<app-property class="mat-card-item" *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8]"></app-property>
+</div>
+<mat-paginator [length]="100"
+			   [pageSize]="10"
+			   [pageSizeOptions]="[5, 10, 25, 100]"
+			   aria-label="Select page">
+</mat-paginator>

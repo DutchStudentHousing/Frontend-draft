@@ -1,0 +1,39 @@
+mat-expansion-panel {
+	border-radius: 0;
+}
+
+.filters-header {
+	display: flex;
+	padding: 24px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.filters-horizontal p, .filters-types {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.filters-horizontal p, .filters-types {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.filters-horizontal p {
+	gap: 16px;
+}
+
+.filters-facilities p {
+	flex-direction: row;
+	padding: 8px 0;
+}
+
+h2 {
+	margin: 0;
+	flex: 3;
+}
+
+mat-slider {
+	width: 100%;
+}

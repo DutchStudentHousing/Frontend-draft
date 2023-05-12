@@ -1,0 +1,20 @@
+.card-header {
+	padding: 16px;
+}
+
+mat-divider {
+	margin: 0 8px;
+}
+
+mat-card-subtitle {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.card-details {
+	flex-wrap: wrap;
+}
+
+mat-card-actions {
+	justify-content: space-between;
+}
