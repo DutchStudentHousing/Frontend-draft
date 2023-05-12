@@ -30,10 +30,31 @@
 				Rent per month
 			</mat-panel-title>
 		</mat-expansion-panel-header>
-		<mat-slider min="500" max="1500" step="50" discrete="true">
-			<input value="750" matSliderStartThumb>
-			<input value="1250" matSliderEndThumb>
-		</mat-slider>
+		<div class="filters-horizontal">
+			<section class="filters-slider">
+				<mat-slider discrete="true" max="5000" min="50" step="50">
+					<input matSliderStartThumb value="500">
+					<input matSliderEndThumb value="1250">
+				</mat-slider>
+			</section>
+			<section class="filters-numbers">
+				<mat-form-field appearance="outline">
+					<mat-label>Min</mat-label>
+					<input matInput type="text">
+					<button aria-label="Clear" mat-icon-button matSuffix>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label>Max</mat-label>
+					<input matInput type="text">
+					<button aria-label="Clear" mat-icon-button matSuffix>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</section>
+		</div>
 	</mat-expansion-panel>
 
 	<mat-expansion-panel>
@@ -115,62 +136,28 @@
 
 	<mat-expansion-panel>
 		<mat-expansion-panel-header>
-			<mat-panel-title>Facilities</mat-panel-title>
+			<mat-panel-title>Facilities and rules</mat-panel-title>
 		</mat-expansion-panel-header>
 		<div class="filters-horizontal filters-facilities">
 			<p>
-				Internet
+				Furnished
 				<mat-slide-toggle></mat-slide-toggle>
 			</p>
 			<p>
-				Furnished
+				Internet included
 				<mat-slide-toggle></mat-slide-toggle>
 			</p>
 			<p>
 				Utilities included
 				<mat-slide-toggle></mat-slide-toggle>
 			</p>
-		</div>
-	</mat-expansion-panel>
-
-	<mat-expansion-panel>
-		<mat-expansion-panel-header>
-			<mat-panel-title>Rules</mat-panel-title>
-		</mat-expansion-panel-header>
-		<div class="filters-horizontal">
 			<p>
 				Pets allowed
-				<mat-button-toggle-group name="petsAllowed">
-					<mat-button-toggle value="yes">
-						<mat-icon>done</mat-icon>
-						Yes
-					</mat-button-toggle>
-					<mat-button-toggle value="agreement">
-						<mat-icon>question_answer</mat-icon>
-						By agreement
-					</mat-button-toggle>
-					<mat-button-toggle value="no">
-						<mat-icon>not_interested</mat-icon>
-						No
-					</mat-button-toggle>
-				</mat-button-toggle-group>
+				<mat-slide-toggle></mat-slide-toggle>
 			</p>
 			<p>
-				Smoking inside
-				<mat-button-toggle-group name="smokingAllowed">
-					<mat-button-toggle value="yes">
-						<mat-icon>smoking_rooms</mat-icon>
-						Yes
-					</mat-button-toggle>
-					<mat-button-toggle value="agreement">
-						<mat-icon>fire_truck</mat-icon>
-						Not important
-					</mat-button-toggle>
-					<mat-button-toggle value="no">
-						<mat-icon>smoke_free</mat-icon>
-						No
-					</mat-button-toggle>
-				</mat-button-toggle-group>
+				Smoking inside allowed
+				<mat-slide-toggle></mat-slide-toggle>
 			</p>
 		</div>
 	</mat-expansion-panel>

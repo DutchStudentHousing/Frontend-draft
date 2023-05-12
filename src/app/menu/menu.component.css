@@ -7,10 +7,10 @@
 }
 
 .inbox-header {
-	margin: 0 16px 16px;
+	align-items: center;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	margin: 0 16px 16px;
 }
 
 h2 {

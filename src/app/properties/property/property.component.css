@@ -15,6 +15,12 @@ mat-card-subtitle {
 	flex-wrap: wrap;
 }
 
+.card-details button {
+	font-size: 13px;
+	font-weight: 400;
+	padding: 4px;
+}
+
 mat-card-actions {
 	justify-content: space-between;
 }
