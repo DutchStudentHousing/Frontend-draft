@@ -1,0 +1,41 @@
+<mat-drawer-container autosize>
+	<mat-drawer disableClose mode="side" opened>
+		<app-filters></app-filters>
+	</mat-drawer>
+	<mat-drawer-content>
+		<div class="properties-header">
+			<h1>Search results</h1>
+
+			<mat-form-field appearance="outline" style="margin-bottom: -1.25em;">
+				<mat-label>Sort on</mat-label>
+				<mat-select name="sorton" value="added">
+					<mat-option *ngFor="let sort of filters" [value]="sort.value">
+						{{sort.viewValue}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-button-toggle-group aria-label="Sort" name="sortby">
+				<mat-button-toggle (click)="toggleIcon()" value="asc">
+					<mat-icon>{{icon}}</mat-icon>
+					<mat-icon>sort</mat-icon>
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<mat-button-toggle-group aria-label="Select view mode" name="viewToggle" value="grid">
+				<mat-button-toggle value="grid">
+					<mat-icon>apps</mat-icon>
+					Grid view
+				</mat-button-toggle>
+				<mat-button-toggle value="map">
+					<mat-icon>map</mat-icon>
+					Map view
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+		</div>
+
+		<app-search-grid></app-search-grid>
+
+		<mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true" aria-label="Select page"></mat-paginator>
+	</mat-drawer-content>
+</mat-drawer-container>

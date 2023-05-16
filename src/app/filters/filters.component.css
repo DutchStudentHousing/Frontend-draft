@@ -2,6 +2,10 @@ mat-expansion-panel {
 	border-radius: 0;
 }
 
+.mat-expansion-panel-header-title {
+	flex-grow: 4;
+}
+
 .filters-header {
 	align-items: center;
 	display: flex;
@@ -36,7 +40,7 @@ mat-expansion-panel {
 .filters-numbers {
 	display: flex;
 	gap: 16px;
-	max-width: 300px;
+	max-width: 260px;
 }
 
 .filters-numbers mat-form-field {
@@ -50,4 +54,8 @@ h2 {
 
 mat-slider {
 	width: calc(100% - 20px);
+}
+
+.example-chip-list {
+	width: 100%;
 }
