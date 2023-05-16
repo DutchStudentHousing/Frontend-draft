@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-	<button mat-icon-button aria-label="Example icon-button with menu icon">
+	<button aria-label="DSH" mat-icon-button>
 		<mat-icon>location_city</mat-icon>
 	</button>
 	<span>Dutch Student Housing</span>
@@ -10,10 +10,11 @@
 	<button mat-icon-button matSuffix aria-label="Inbox" [matMenuTriggerFor]="inbox">
 		<mat-icon matBadge="10" matBadgeColor="warn">inbox</mat-icon>
 	</button>
-	<button mat-icon-button matSuffix aria-label="Search">
+	<button aria-label="Search" mat-icon-button matSuffix routerLink="search">
 		<mat-icon>search</mat-icon>
 	</button>
 </mat-toolbar>
+
 <mat-menu #inbox="matMenu" class="inbox-popup" xPosition="before">
 	<mat-nav-list class="message-list">
 		<div class="inbox-header">
@@ -23,7 +24,7 @@
 			</button>
 		</div>
 		<mat-list-item *ngFor="let item of [1, 2, 3, 4, 5]">
-			<img alt="..." matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg">
+			<img alt="Avatar" matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg">
 			<span matListItemTitle>Laan Corpus den Hoorn 106</span>
 			<span matListItemLine>
 				Helaas zoeken we alleen mensen die 5k verdienen

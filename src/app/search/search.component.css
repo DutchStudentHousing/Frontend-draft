@@ -1,0 +1,12 @@
+.properties-header {
+	align-items: baseline;
+	display: flex;
+	gap: 24px;
+	justify-content: space-between;
+	padding: 24px;
+}
+
+h1 {
+	flex: 3;
+	margin: 0;
+}
