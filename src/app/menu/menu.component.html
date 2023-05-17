@@ -1,13 +1,15 @@
 <mat-toolbar color="primary">
-	<button aria-label="DSH" mat-icon-button>
+	<button aria-label="DSH" mat-icon-button routerLink="">
 		<mat-icon>location_city</mat-icon>
 	</button>
-	<span>Dutch Student Housing</span>
+	<span class="header-link" matRipple routerLink="">Dutch Student Housing</span>
+
 	<span class="spacer"></span>
-	<button mat-icon-button matSuffix aria-label="User" (click)="openLoginDialog()">
+
+	<button (click)="openLoginDialog()" aria-label="User" mat-icon-button matSuffix>
 		<mat-icon>login</mat-icon>
 	</button>
-	<button mat-icon-button matSuffix aria-label="Inbox" [matMenuTriggerFor]="inbox">
+	<button [matMenuTriggerFor]="inbox" aria-label="Inbox" mat-icon-button matSuffix>
 		<mat-icon matBadge="10" matBadgeColor="warn">inbox</mat-icon>
 	</button>
 	<button aria-label="Search" mat-icon-button matSuffix routerLink="search">
@@ -19,17 +21,15 @@
 	<mat-nav-list class="message-list">
 		<div class="inbox-header">
 			<h2>Messages</h2>
-			<button mat-stroked-button class="view-all-messages">
+			<button class="view-all-messages" mat-stroked-button>
 				View all messages
 			</button>
 		</div>
 		<mat-list-item *ngFor="let item of [1, 2, 3, 4, 5]">
 			<img alt="Avatar" matListItemAvatar src="https://material.angular.io/assets/img/examples/shiba2.jpg">
-			<span matListItemTitle>Laan Corpus den Hoorn 106</span>
-			<span matListItemLine>
+			<span matListItemTitle>Laan Corpus den Hoorn 106</span> <span matListItemLine>
 				Helaas zoeken we alleen mensen die 5k verdienen
-			</span>
-			<span matListItemMeta>
+			</span> <span matListItemMeta>
 				<button mat-icon-button matTooltip="Reply">
 					<mat-icon>reply</mat-icon>
 				</button>

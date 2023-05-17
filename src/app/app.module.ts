@@ -8,7 +8,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatChipsModule} from "@angular/material/chips";
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
@@ -39,9 +39,13 @@ import {MenuComponent} from './menu/menu.component';
 import {PropertyComponent} from './property/property.component';
 import {SearchGridComponent} from './search-grid/search-grid.component';
 import {SearchComponent} from './search/search.component';
+import {DetailComponent} from './detail/detail.component';
+import {HomeComponent} from './home/home.component';
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
-	bootstrap: [AppComponent, MenuComponent, SearchComponent],
+	bootstrap: [MenuComponent, AppComponent],
 	declarations: [
 		AppComponent,
 		MenuComponent,
@@ -49,7 +53,9 @@ import {SearchComponent} from './search/search.component';
 		PropertyComponent,
 		FiltersComponent,
 		LoginComponent,
-		SearchGridComponent
+		SearchGridComponent,
+		DetailComponent,
+		HomeComponent
 	],
 	imports: [
 		BrowserModule,
@@ -85,7 +91,10 @@ import {SearchComponent} from './search/search.component';
 		MatListModule,
 		MatSelectModule,
 		MatCheckboxModule,
-		MatAutocompleteModule
+		MatAutocompleteModule,
+		MatRippleModule,
+		LeafletModule,
+		NgOptimizedImage
 	],
 	providers: []
 })

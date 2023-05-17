@@ -1,6 +1,6 @@
 <mat-card class="example-card">
 	<div class="card-header">
-		<mat-card-title>Laan Corpus den Hoorn 106</mat-card-title>
+		<mat-card-title routerLink="/detail">Laan Corpus den Hoorn 106</mat-card-title>
 		<mat-card-subtitle>
 			<span class="card-city">Groningen</span>
 			<mat-divider [vertical]="true"></mat-divider>
@@ -9,7 +9,7 @@
 			<span class="card-date">Added 4d ago</span>
 		</mat-card-subtitle>
 	</div>
-	<img alt="Photo of a Shiba Inu" mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg">
+	<img alt="Photo of a Shiba Inu" mat-card-image routerLink="/detail" src="https://material.angular.io/assets/img/examples/shiba2.jpg">
 	<mat-card-actions class="card-details">
 		<button mat-button matTooltip="Rent">
 			<mat-icon>payments</mat-icon>
@@ -42,7 +42,7 @@
 			<mat-icon>face</mat-icon>
 			Henk
 		</button>
-		<button mat-stroked-button>
+		<button mat-stroked-button routerLink="/detail">
 			<mat-icon>open_in_new</mat-icon>
 			View property
 		</button>
