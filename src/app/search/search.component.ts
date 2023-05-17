@@ -6,7 +6,7 @@ interface Sort {
 }
 
 @Component({
-	selector: 'app-root',
+	selector: 'app-search',
 	templateUrl: './search.component.html',
 	styleUrls: ['./search.component.css']
 })

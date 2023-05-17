@@ -1,3 +1,9 @@
+* {
+	padding: 0;
+	margin: 0;
+	scroll-behavior: smooth;
+}
+
 body {
 	background: #FAFAFA;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -15,4 +21,12 @@ html, body {
 
 .spacer {
 	flex: 1 1 auto;
+}
+
+.leaflet-marker-icon button {
+	cursor: help !important;
+}
+
+.mdc-list {
+	padding: 0 !important;
 }
