@@ -1,85 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import {LocationDetails} from "./locationDetails";
-import {propertyDetails} from "./propertyDetails"
+import {LocationDetails} from "../detail/locationDetails";
 
 @Component({
-	selector: 'app-detail',
-	templateUrl: './detail.component.html',
-	styleUrls: ['./detail.component.css']
+	selector: 'app-search-map',
+	templateUrl: './search-map.component.html',
+	styleUrls: ['./search-map.component.css']
 })
-export class DetailComponent implements OnInit {
-	// Property details
-	details: propertyDetails = {
-		additionalCosts: 100,
-		address: "Laan Corpus den Hoorn 106",
-		bathroom: true,
-		city: "Groningen",
-		energyLabel: "A",
-		furnished: true,
-		internet: true,
-		kitchen: true,
-		living: true,
-		pets: false,
-		postalCode: "9728 JR",
-		propertyType: "studio",
-		publicationDate: new Date("2023-05-01"),
-		registrationCosts: 200,
-		rent: 1500,
-		rentableFrom: new Date("2023-06-01"),
-		rentableTo: new Date("2023-12-31"),
-		savings: 5000,
-		smoking: false,
-		surface: 100,
-		utilities: true,
-		matchDaytimeActivity: "test",
-		matchMinAge: 18,
-		matchMaxAge: 99,
-		matchLanguage: "Test",
-		matchGender: "male",
-		matchPeople: 5
-	};
-
-	// Nearby locations
+export class SearchMapComponent implements OnInit {
 	options: L.MapOptions = {
 		layers: [],
 		preferCanvas: true
 	};
 
 	nearbyLocations: LocationDetails[] = [
-		{
-			latLng: new L.LatLng(53.1936303, 6.5556716),
-			icon: 'home',
-			label: 'Property',
-			color: 'warn'
-		},
-		{
-			latLng: new L.LatLng(53.1981888, 6.5613274),
-			icon: 'shopping_cart',
-			label: 'Supermarket',
-			brand: 'Jumbo',
-			color: 'primary'
-		},
-		{
-			latLng: new L.LatLng(53.1875850, 6.5548363),
-			icon: 'shopping_cart',
-			label: 'Supermarket',
-			brand: 'Albert Heijn',
-			color: 'primary'
-		},
-		{
-			latLng: new L.LatLng(53.2109237, 6.5641028),
-			icon: 'train',
-			label: 'Train station',
-			color: 'primary'
-		},
-		{
-			latLng: new L.LatLng(53.194488, 6.5556091),
-			icon: 'directions_bus',
-			label: 'Bus stop',
-			color: 'primary'
-		},
 		{
 			latLng: new L.LatLng(52.0065142, 4.3556781),
 			icon: 'school',
@@ -104,12 +39,12 @@ export class DetailComponent implements OnInit {
 			label: 'Leiden University',
 			color: 'primary'
 		},
-		{
-			latLng: new L.LatLng(50.8483876, 5.6888897),
-			icon: 'school',
-			label: 'Maastricht University',
-			color: 'primary'
-		},
+		/*		{
+					latLng: new L.LatLng(50.8483876, 5.6888897),
+					icon: 'school',
+					label: 'Maastricht University',
+					color: 'primary'
+				},*/
 		{
 			latLng: new L.LatLng(51.9883572, 5.8951989),
 			icon: 'school',
@@ -241,9 +176,6 @@ export class DetailComponent implements OnInit {
 			});
 
 			const markerLatLngs: L.LatLng[] = [];
-			const propertyLocation = this.nearbyLocations.find(
-				(location) => location.label === 'Property'
-			);
 
 			this.nearbyLocations.forEach((markerData) => {
 				const markerIcon = L.divIcon({
@@ -258,10 +190,7 @@ export class DetailComponent implements OnInit {
 
 				markerData.marker = leafletMarker;
 				markersLayer.addLayer(leafletMarker);
-
-				if (propertyLocation && markerData.latLng.distanceTo(propertyLocation.latLng) <= 750) {
-					markerLatLngs.push(markerData.latLng);
-				}
+				markerLatLngs.push(markerData.latLng);
 
 				leafletMarker.on('click', () => {
 					console.log('Marker clicked!', markerData);
@@ -272,7 +201,7 @@ export class DetailComponent implements OnInit {
 
 			// Fit the map to the marker bounds
 			const bounds = L.latLngBounds(markerLatLngs);
-			map.fitBounds(bounds, {padding: [40, 40]});
+			map.fitBounds(bounds, {padding: [50, 50]});
 
 			// Add current location
 			if (navigator.geolocation) {
@@ -299,37 +228,5 @@ export class DetailComponent implements OnInit {
 
 			this.mapInstance = map;
 		}
-	}
-
-	getNearest(type: string): LocationDetails[] {
-		const propertyLocation = this.nearbyLocations.find(
-			(location) => location.label === 'Property'
-		);
-
-		if (propertyLocation) {
-			// Sort locations by distance to property location
-			const sortedLocations = this.nearbyLocations.slice().sort((a, b) => {
-				const distanceA = a.latLng.distanceTo(propertyLocation.latLng);
-				const distanceB = b.latLng.distanceTo(propertyLocation.latLng);
-				return distanceA - distanceB;
-			});
-
-			// Filter out the two nearest schools
-			return sortedLocations.filter(
-				(location) => location.icon === type
-			).slice(0, 2);
-		}
-
-		return [];
-	}
-
-
-	calculateDistanceToProperty(location: LocationDetails): number | null {
-		const propertyLocation = this.nearbyLocations.find(loc => loc.label === 'Property');
-		if (propertyLocation) {
-			const distance = location.latLng.distanceTo(propertyLocation.latLng);
-			return Math.floor(distance);
-		}
-		return null;
 	}
 }

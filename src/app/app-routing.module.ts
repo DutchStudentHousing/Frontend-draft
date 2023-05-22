@@ -3,10 +3,20 @@ import {RouterModule, Routes} from '@angular/router';
 import {DetailComponent} from "./detail/detail.component";
 import {SearchComponent} from "./search/search.component";
 import {HomeComponent} from "./home/home.component";
+import {SearchGridComponent} from "./search-grid/search-grid.component";
+import {SearchMapComponent} from "./search-map/search-map.component";
 
 const routes: Routes = [
 	{path: '', component: HomeComponent},
-	{path: 'search', component: SearchComponent},
+	{
+		path: 'search',
+		component: SearchComponent,
+		children: [
+			{path: '', redirectTo: 'list', pathMatch: 'full'},
+			{path: 'list', component: SearchGridComponent},
+			{path: 'map', component: SearchMapComponent}
+		]
+	},
 	{path: 'detail', component: DetailComponent},
 ];
 

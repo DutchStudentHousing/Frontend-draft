@@ -43,6 +43,7 @@ import {DetailComponent} from './detail/detail.component';
 import {HomeComponent} from './home/home.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {NgOptimizedImage} from "@angular/common";
+import {SearchMapComponent} from './search-map/search-map.component';
 
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent],
@@ -55,7 +56,8 @@ import {NgOptimizedImage} from "@angular/common";
 		LoginComponent,
 		SearchGridComponent,
 		DetailComponent,
-		HomeComponent
+		HomeComponent,
+		SearchMapComponent
 	],
 	imports: [
 		BrowserModule,

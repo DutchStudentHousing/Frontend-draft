@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Router} from "@angular/router";
 
 interface Sort {
 	value: string;
@@ -11,6 +12,13 @@ interface Sort {
 	styleUrls: ['./search.component.css']
 })
 export class SearchComponent {
+	constructor(private router: Router) {
+	}
+
+	isRouteActive(routePath: string): boolean {
+		return this.router.url === routePath;
+	}
+
 	filters: Sort[] = [
 		{value: 'name', viewValue: 'Name'},
 		{value: 'added', viewValue: 'Date added'},

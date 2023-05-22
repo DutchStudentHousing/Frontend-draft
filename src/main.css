@@ -1,6 +1,4 @@
 * {
-	padding: 0;
-	margin: 0;
 	scroll-behavior: smooth;
 }
 
@@ -8,11 +6,10 @@ body {
 	background: #FAFAFA;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	margin: 0;
-	padding: 0;
 }
 
 html, body {
-	height: 100vh;
+	height: calc(100vh - 64px);
 }
 
 .inbox-popup {
@@ -29,4 +26,8 @@ html, body {
 
 .mdc-list {
 	padding: 0 !important;
+}
+
+.leaflet-control-attribution {
+	display: none;
 }

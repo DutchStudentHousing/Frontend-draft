@@ -6,5 +6,4 @@ import {Component} from '@angular/core';
 	styleUrls: ['./search-grid.component.css']
 })
 export class SearchGridComponent {
-
 }
