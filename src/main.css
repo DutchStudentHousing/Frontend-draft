@@ -31,3 +31,7 @@ html, body {
 .leaflet-control-attribution {
 	display: none;
 }
+
+.hidden {
+	display: none !important;
+}

@@ -1,45 +1,92 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {Slider} from "./slider";
+import {ActivatedRoute, ParamMap} from "@angular/router";
 
 @Component({
 	selector: 'app-filters',
 	styleUrls: ['./filters.component.css'],
 	templateUrl: './filters.component.html'
 })
-export class FiltersComponent {
-	// Property type
-	propertyTypeFormGroup = new FormGroup({
-		room: new FormControl(),
-		apartment: new FormControl(),
-		studio: new FormControl(),
-		anti_squat: new FormControl(),
-		student_residence: new FormControl()
-	});
+export class FiltersComponent implements OnInit {
+	propertyTypes: { key: string, label: string }[] = [
+		{key: 'room', label: 'Room'},
+		{key: 'apartment', label: 'Apartment'},
+		{key: 'studio', label: 'Studio'},
+		{key: 'anti_squat', label: 'Anti-squat'},
+		{key: 'student_residence', label: 'Student residence'}
+	];
+	facilitiesRules: { key: string, label: string }[] = [
+		{key: 'furnished', label: 'Furnished'},
+		{key: 'internet', label: 'Internet included'},
+		{key: 'utilities', label: 'Utilities included'},
+		{key: 'pets', label: 'Pets allowed'},
+		{key: 'smoking', label: 'Smoking allowed'}
+	];
 
+	propertyTypeFG: FormGroup = this.createFormGroup(this.propertyTypes);
+	facilitiesRulesFG: FormGroup = this.createFormGroup(this.facilitiesRules);
 	// Rent input
-	rentStep: number = 50;
-	rentLimitMin: number = 50;
-	rentLimitMax: number = 5000;
-	rentMin: number = 500;
-	rentMax: number = 1250;
-
+	rent: Slider = {
+		step: 50,
+		limitMin: 50,
+		limitMax: 5000,
+		min: null,
+		max: null,
+	};
 	// Surface input
-	surfaceStep: number = 5;
-	surfaceLimitMin: number = 5;
-	surfaceLimitMax: number = 100;
-	surfaceMin: number = 10;
-	surfaceMax: number = 75;
+	surface: Slider = {
+		step: 5,
+		limitMin: 5,
+		limitMax: 100,
+		min: null,
+		max: null,
+	};
+	// Energy label input
+	energyLabels: string[] = ["A", "B", "C", "D", "E", "F"];
+	selectedLabels: string[] = [];
 
-	// Facilities input
-	countEnabledToggles = (section: string) => {
-		const enabledCount = document.querySelectorAll(`#filter-${section} .mat-mdc-slide-toggle-checked, #filter-${section} .mat-mdc-checkbox-checked`).length;
+	// Constructor
+	constructor(private route: ActivatedRoute, private formBuilder: FormBuilder) {
+		this.filteredCities = this.citiesFormControl.valueChanges.pipe(
+			startWith(null),
+			map((value) => {
+				const filterValue = value ? value.toLowerCase().replace(/[,;.\s]+$/, '') : '';
+				return this.allCities
+					.filter((city) => !this.cities.includes(city) && city.toLowerCase().includes(filterValue))
+					.sort();
+			})
+		);
+	}
+
+	// Receive values from query parameters
+	ngOnInit() {
+		this.route.queryParamMap.subscribe((params: ParamMap) => {
+			const minRent = params.get('minRent');
+			const maxRent = params.get('maxRent');
+
+			this.rent = {
+				...this.rent,
+				min: minRent ? parseInt(minRent, 10) : null,
+				max: maxRent ? parseInt(maxRent, 10) : null,
+			};
+		});
+	}
+
+	// Check filter status
+	countEnabledToggles = (formGroup: FormGroup): string => {
+		const enabledCount = Object.values(formGroup.value).filter(value => value).length;
 		return enabledCount > 0 ? `${enabledCount} enabled` : '';
 	};
 
+	allCheckboxesUnselected = (formGroup: FormGroup): boolean => {
+		const checkboxes = formGroup.controls;
+		return !Object.values<any>(checkboxes).some(control => control.value);
+	};
 
 	// City selector
 	separatorKeysCodes = [ENTER, COMMA];
@@ -53,18 +100,6 @@ export class FiltersComponent {
 	countNumberOfCities = () => {
 		return this.citiesCount <= 0 ? '' : `${this.citiesCount} cit${this.citiesCount === 1 ? 'y' : 'ies'}`;
 	};
-
-	constructor() {
-		this.filteredCities = this.citiesFormControl.valueChanges.pipe(
-			startWith(null),
-			map((value) => {
-				const filterValue = value ? value.toLowerCase().replace(/[,;.\s]+$/, '') : '';
-				return this.allCities
-					.filter((city) => !this.cities.includes(city) && city.toLowerCase().includes(filterValue))
-					.sort();
-			})
-		);
-	}
 
 	removeCity(city: string): void {
 		const index = this.cities.indexOf(city);
@@ -100,5 +135,37 @@ export class FiltersComponent {
 	private filterCities(value: string | null): string[] {
 		const filterValue = value ? value.toLowerCase().replace(/[,;.\s]+$/, '') : '';
 		return this.allCities.filter((city) => !this.cities.includes(city) && city.toLowerCase().includes(filterValue)).sort();
+	}
+
+	// Slider panels
+	updatePanel = (panel: any, thumb: string) => {
+		let {min, max, step, limitMin, limitMax} = panel;
+
+		let calculatedMin = Math.max(Math.floor(min / step) * step, limitMin);
+		max = Math.min(Math.floor(max / step) * step, limitMax);
+
+		if (thumb === 'start' && calculatedMin > max - step) {
+			max = Math.min(calculatedMin + step, limitMax);
+		} else if (thumb === 'end' && max < calculatedMin + step) {
+			calculatedMin = Math.max(max - step, limitMin);
+		}
+
+		min = (max === limitMin) ? 0 : calculatedMin;
+		if (max > limitMax) {
+			min -= step;
+			max = limitMax;
+		}
+
+		panel.min = min;
+		panel.max = max;
+	};
+
+	private createFormGroup(options: { key: string; label: string }[]): FormGroup {
+		const formGroupConfig = options.reduce((controls: { [key: string]: any }, option) => {
+			controls[option.key] = this.formBuilder.control(false);
+			return controls;
+		}, {});
+
+		return this.formBuilder.group(formGroupConfig);
 	}
 }

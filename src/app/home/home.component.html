@@ -1,25 +1,35 @@
 <div class="home-container">
 	<h1>Welcome to Dutch Student Housing, over X properties</h1>
+
 	<mat-card [formGroup]="search" class="search">
 		<mat-form-field appearance="outline" floatLabel="always">
 			<mat-label>Search for city or postal code</mat-label>
-			<input formControlName="query" matInput placeholder="Type here..." type="search">
+			<input formControlName="query" matInput placeholder="Type here..." required type="search">
 		</mat-form-field>
+
 		<mat-form-field appearance="outline" floatLabel="always">
 			<mat-label>min. Rent</mat-label>
-			<input #minRent [max]="maxRent.value" formControlName="minRent" matInput step="50" type="number">
+			<input [max]="search.value.maxRent" [min]="rent.limitMin" [step]="rent.step" formControlName="minRent"
+				matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
+
 		<mat-form-field appearance="outline" floatLabel="always">
 			<mat-label>max. Rent</mat-label>
-			<input #maxRent [min]="minRent.value" formControlName="maxRent" matInput step="50" type="number">
+			<input [max]="rent.limitMax" [min]="search.value.minRent" [step]="rent.step" formControlName="maxRent"
+				matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
-		<button color="primary" mat-raised-button routerLink="/search">
+
+		<button [disabled]="search.invalid"
+			[queryParams]="{ query: search.value.query, minRent: search.value.minRent, maxRent: search.value.maxRent }"
+			color="primary" mat-raised-button
+			routerLink="/search">
 			<mat-icon>search</mat-icon>
 			Search
 		</button>
 	</mat-card>
+
 	<div class="box-3">
 		<mat-card>
 			<div class="card-header">

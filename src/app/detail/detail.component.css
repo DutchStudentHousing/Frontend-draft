@@ -115,7 +115,3 @@ mat-card:nth-child(even) {
 	width: 75%;
 	aspect-ratio: 1/1;
 }
-
-.hidden {
-	display: none;
-}
