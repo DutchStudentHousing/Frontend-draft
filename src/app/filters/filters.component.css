@@ -2,8 +2,20 @@ mat-expansion-panel {
 	border-radius: 0 !important;
 }
 
+.mat-expanded mat-panel-description {
+	display: none;
+}
+
+.mat-expansion-panel-header {
+	padding: 0 12px;
+}
+
 .mat-expansion-panel-header-title {
 	flex-grow: 4;
+}
+
+mat-panel-title mat-slide-toggle {
+	zoom: 0.8;
 }
 
 .filters-header {

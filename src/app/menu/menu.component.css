@@ -22,7 +22,7 @@ mat-toolbar {
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
-	margin: 0 16px 16px;
+	margin: 16px;
 }
 
 h2 {

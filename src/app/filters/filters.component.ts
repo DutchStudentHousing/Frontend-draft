@@ -21,15 +21,25 @@ export class FiltersComponent {
 	});
 
 	// Rent input
-	rentStep = 50;
-	rentMin = 50;
-	rentMax = 5000;
+	rentStep: number = 50;
+	rentLimitMin: number = 50;
+	rentLimitMax: number = 5000;
+	rentMin: number = 500;
+	rentMax: number = 1250;
+
+	// Surface input
+	surfaceStep: number = 5;
+	surfaceLimitMin: number = 5;
+	surfaceLimitMax: number = 100;
+	surfaceMin: number = 10;
+	surfaceMax: number = 75;
 
 	// Facilities input
-	countEnabledToggles() {
-		const enabledCount = document.querySelectorAll('mat-slide-toggle.mat-mdc-slide-toggle-checked').length;
+	countEnabledToggles = (section: string) => {
+		const enabledCount = document.querySelectorAll(`#filter-${section} .mat-mdc-slide-toggle-checked, #filter-${section} .mat-mdc-checkbox-checked`).length;
 		return enabledCount > 0 ? `${enabledCount} enabled` : '';
-	}
+	};
+
 
 	// City selector
 	separatorKeysCodes = [ENTER, COMMA];

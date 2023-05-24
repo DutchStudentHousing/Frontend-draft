@@ -149,84 +149,75 @@ export class SearchMapComponent implements OnInit {
 		}
 	];
 
-	mapInstance!: L.Map;
+	ngOnInit(): void {
+		const map = L.map('map');
 
-	ngOnInit() {
-		if (!this.mapInstance) {
-			const map = L.map('map');
+		L.tileLayer('https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+			attribution: '&copy; OpenStreetMap contributors'
+		}).addTo(map);
 
-			L.tileLayer('https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-				attribution: '&copy; OpenStreetMap contributors'
-			}).addTo(map);
+		const markersLayer = new L.MarkerClusterGroup({
+			iconCreateFunction: (cluster) => {
+				const childMarkers = cluster.getAllChildMarkers();
+				const childColors = new Set(childMarkers.map(marker => this.nearbyLocations.find(location => location.latLng.equals(marker.getLatLng()))?.color ?? 'primary'));
+				const clusterColor = childColors.has('warn') ? 'warn' : 'primary';
+				const count = cluster.getChildCount();
 
-			const markersLayer = new L.MarkerClusterGroup({
-				iconCreateFunction: (cluster) => {
-					const childMarkers = cluster.getAllChildMarkers();
-					const childColors = new Set(childMarkers.map(marker => this.nearbyLocations.find(location => location.latLng.equals(marker.getLatLng()))?.color ?? 'primary'));
-					const clusterColor = childColors.has('warn') ? 'warn' : 'primary';
-					const count = cluster.getChildCount();
-
-					return L.divIcon({
-						html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${clusterColor} mat-mdc-button-base" title="${count} locations near each other"><span class="mdc-button__label">${count}</span></button>`,
-						className: 'custom-cluster-icon',
-						iconSize: [40, 40],
-						iconAnchor: [20, 40]
-					});
-				}
-			});
-
-			const markerLatLngs: L.LatLng[] = [];
-
-			this.nearbyLocations.forEach((markerData) => {
-				const markerIcon = L.divIcon({
-					html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${markerData.color} mat-mdc-button-base" title="${markerData.label}"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">${markerData.icon}</mat-icon><span class="mdc-button__label"></span></button>`,
-					className: 'custom-marker-icon',
+				return L.divIcon({
+					html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${clusterColor} mat-mdc-button-base" title="${count} locations near each other"><span class="mdc-button__label">${count}</span></button>`,
+					className: 'custom-cluster-icon',
 					iconSize: [40, 40],
-					iconAnchor: [20, 40],
+					iconAnchor: [20, 40]
 				});
-				const leafletMarker = L.marker(markerData.latLng, {
-					icon: markerIcon,
-				});
-
-				markerData.marker = leafletMarker;
-				markersLayer.addLayer(leafletMarker);
-				markerLatLngs.push(markerData.latLng);
-
-				leafletMarker.on('click', () => {
-					console.log('Marker clicked!', markerData);
-				});
-			});
-
-			map.addLayer(markersLayer);
-
-			// Fit the map to the marker bounds
-			const bounds = L.latLngBounds(markerLatLngs);
-			map.fitBounds(bounds, {padding: [50, 50]});
-
-			// Add current location
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(
-					(position) => {
-						const currentLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
-						const markerIcon = L.divIcon({
-							html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-accent mat-mdc-button-base" title="Current Location"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">my_location</mat-icon><span class="mdc-button__label"></span></button>`,
-							className: 'current-location-marker-icon',
-							iconSize: [40, 40],
-							iconAnchor: [20, 40]
-						});
-						const leafletMarker = L.marker(currentLatLng, {
-							icon: markerIcon
-						});
-
-						markersLayer.addLayer(leafletMarker);
-					},
-					(error) => console.error('Error retrieving current location:', error)
-				);
-			} else {
-				console.error('Geolocation is not supported by this browser.');
 			}
+		});
 
-			this.mapInstance = map;
+		const markerLatLngs: L.LatLng[] = [];
+
+		this.nearbyLocations.forEach((markerData) => {
+			const markerIcon = this.createMarkerIcon(markerData.color, markerData.label, markerData.icon);
+			const leafletMarker = L.marker(markerData.latLng, {icon: markerIcon});
+
+			markerData.marker = leafletMarker;
+			markersLayer.addLayer(leafletMarker);
+			markerLatLngs.push(markerData.latLng);
+
+			leafletMarker.on('click', () => {
+				console.log('Marker clicked!', markerData);
+			});
+		});
+
+		map.addLayer(markersLayer);
+		const bounds = L.latLngBounds(markerLatLngs);
+		map.fitBounds(bounds, {padding: [50, 50]});
+
+		this.addCurrentLocationMarker(markersLayer);
+	}
+
+	private createMarkerIcon(color: string, label: string, icon: string): L.DivIcon {
+		return L.divIcon({
+			html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${color} mat-mdc-button-base" title="${label}"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">${icon}</mat-icon><span class="mdc-button__label"></span></button>`,
+			className: 'custom-marker-icon',
+			iconSize: [40, 40],
+			iconAnchor: [20, 40],
+		});
+	}
+
+	private addCurrentLocationMarker(markersLayer: L.MarkerClusterGroup): void {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const currentLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+					const markerIcon = this.createMarkerIcon('accent', 'Current Location', 'my_location');
+					const leafletMarker = L.marker(currentLatLng, {icon: markerIcon});
+
+					markersLayer.addLayer(leafletMarker);
+				},
+				(error) => console.error('Error retrieving current location:', error)
+			);
+		} else {
+			console.error('Geolocation is not supported by this browser.');
 		}
 	}
+
 }

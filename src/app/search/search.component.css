@@ -1,10 +1,9 @@
 mat-drawer-container {
-	height: 100%;
+	min-height: calc(100% - 64px);
 }
 
-mat-drawer-content {
-	overflow-y: auto;
-	scrollbar-gutter: stable;
+mat-drawer {
+	min-width: 340px;
 }
 
 .properties-header {

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
 	selector: 'app-home',
@@ -7,4 +8,9 @@ import {Component} from '@angular/core';
 })
 export class HomeComponent {
 
+	search = new FormGroup({
+		query: new FormControl(),
+		minRent: new FormControl(),
+		maxRent: new FormControl()
+	});
 }

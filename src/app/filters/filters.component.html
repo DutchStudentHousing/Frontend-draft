@@ -10,11 +10,14 @@
 	</button>
 </div>
 
-<mat-accordion>
-	<mat-expansion-panel id="panel-property-type">
+<mat-accordion displayMode="flat">
+	<mat-expansion-panel id="filter-property-type">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Property type</mat-panel-title>
-			<mat-panel-description></mat-panel-description>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Property type
+			</mat-panel-title>
+			<mat-panel-description>{{ countEnabledToggles("property-type") }}</mat-panel-description>
 		</mat-expansion-panel-header>
 		<div [formGroup]="propertyTypeFormGroup" class="filters-horizontal">
 			<section>
@@ -27,60 +30,82 @@
 		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-rent">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Rent per month</mat-panel-title>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Rent per month
+			</mat-panel-title>
+			<mat-panel-description>€{{rentMin}}-{{rentMax}}</mat-panel-description>
 		</mat-expansion-panel-header>
 
 		<div class="filters-horizontal">
 			<section class="filters-slider">
-				<mat-slider discrete="true" max="{{rentMax}}" min="{{rentMin}}" step="{{rentStep}}">
-					<input matSliderStartThumb value="750"> <input matSliderEndThumb value="2000">
+				<mat-slider [max]="rentLimitMax" [min]="rentLimitMin" [step]="rentStep">
+					<input [(ngModel)]="rentMin" [max]="rentMax" matSliderStartThumb/>
+					<input [(ngModel)]="rentMax" [min]="rentMin" matSliderEndThumb/>
 				</mat-slider>
 			</section>
 
 			<section class="filters-numbers">
 				<mat-form-field appearance="outline">
 					<mat-label>Min</mat-label>
-					<input matInput max="{{rentMax}}" min="{{rentMin}}" step="{{rentStep}}" type="number">
+					<input [(ngModel)]="rentMin" [max]="rentMax" [min]="rentLimitMin" [step]="rentStep" matInput
+						required type="number"/>
 					<span matTextPrefix>€&nbsp;</span>
 				</mat-form-field>
-
 				<mat-form-field appearance="outline">
 					<mat-label>Max</mat-label>
-					<input matInput max="{{rentMax}}" min="{{rentMin}}" step="{{rentStep}}" type="number">
+					<input [(ngModel)]="rentMax" [max]="rentLimitMax" [min]="rentMin" [step]="rentStep" matInput
+						required type="number"/>
 					<span matTextPrefix>€&nbsp;</span>
 				</mat-form-field>
 			</section>
 		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-surface">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Available surface</mat-panel-title>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Surface
+			</mat-panel-title>
+			<mat-panel-description>{{surfaceMin}}-{{surfaceMax}}M²</mat-panel-description>
 		</mat-expansion-panel-header>
 
-		<mat-slider discrete="true" max="1500" min="500" step="50">
-			<input matSliderStartThumb value="750"> <input matSliderEndThumb value="1250">
-		</mat-slider>
+		<div class="filters-horizontal">
+			<section class="filters-slider">
+				<mat-slider [max]="surfaceLimitMax" [min]="surfaceLimitMin" [step]="surfaceStep">
+					<input [(ngModel)]="surfaceMin" [max]="surfaceMax" matSliderStartThumb/>
+					<input [(ngModel)]="surfaceMax" [min]="surfaceMin" matSliderEndThumb/>
+				</mat-slider>
+			</section>
 
-		<section class="filters-numbers">
-			<mat-form-field appearance="outline">
-				<mat-label>Min</mat-label>
-				<input matInput type="number"> <span matTextSuffix>&nbsp;M²</span>
-			</mat-form-field>
-
-			<mat-form-field appearance="outline">
-				<mat-label>Max</mat-label>
-				<input matInput type="number"> <span matTextSuffix>&nbsp;M²</span>
-			</mat-form-field>
-		</section>
+			<section class="filters-numbers">
+				<mat-form-field appearance="outline">
+					<mat-label>Min</mat-label>
+					<input [(ngModel)]="surfaceMin" [max]="surfaceMax" [min]="surfaceLimitMin" [step]="surfaceStep"
+						matInput required type="number"/>
+					<span matTextSuffix>&nbsp;M²</span>
+				</mat-form-field>
+				<mat-form-field appearance="outline">
+					<mat-label>Max</mat-label>
+					<input [(ngModel)]="surfaceMax" [max]="surfaceLimitMax" [min]="surfaceMin" [step]="surfaceStep"
+						matInput required type="number"/>
+					<span matTextSuffix>&nbsp;M²</span>
+				</mat-form-field>
+			</section>
+		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-city">
 		<mat-expansion-panel-header>
-			<mat-panel-title>City</mat-panel-title>
-			<mat-panel-description>{{ countNumberOfCities() }}</mat-panel-description>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				City
+			</mat-panel-title>
+			<mat-panel-description
+				matTooltip="{{ cities.join(', ') }}">{{ countNumberOfCities() }}</mat-panel-description>
 		</mat-expansion-panel-header>
 
 		<mat-form-field appearance="outline" class="full-width" floatLabel="always">
@@ -93,7 +118,8 @@
 					</button>
 				</mat-chip-row>
 			</mat-chip-grid>
-			<input #cityInput [formControl]="citiesFormControl" [matAutocomplete]="auto" [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="Enter city name..."/>
+			<input #cityInput [formControl]="citiesFormControl" [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="Enter city name..."/>
 			<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCity($event)" autoActiveFirstOption>
 				<mat-option *ngFor="let city of filteredCities | async | slice:0:5" [value]="city">
 					{{city}}
@@ -102,9 +128,12 @@
 		</mat-form-field>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-rooms">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Rooms</mat-panel-title>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Rooms
+			</mat-panel-title>
 		</mat-expansion-panel-header>
 		<div class="filters-horizontal">
 			<span>Kitchen</span>
@@ -161,10 +190,13 @@
 		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-facilities-rules">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Facilities and rules</mat-panel-title>
-			<mat-panel-description>{{ countEnabledToggles() }}</mat-panel-description>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Facilities and rules
+			</mat-panel-title>
+			<mat-panel-description>{{ countEnabledToggles("facilities-rules") }}</mat-panel-description>
 		</mat-expansion-panel-header>
 		<div class="filters-horizontal">
 			<mat-slide-toggle name="furnished">Furnished</mat-slide-toggle>
@@ -175,9 +207,12 @@
 		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-energy-label">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Energy label</mat-panel-title>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Energy label
+			</mat-panel-title>
 		</mat-expansion-panel-header>
 		<mat-button-toggle-group multiple name="energyLabel">
 			<mat-button-toggle value="A">A</mat-button-toggle>
@@ -189,9 +224,12 @@
 		</mat-button-toggle-group>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel id="filter-rentable-period">
 		<mat-expansion-panel-header>
-			<mat-panel-title>Rentable period</mat-panel-title>
+			<mat-panel-title>
+				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				Rentable period
+			</mat-panel-title>
 		</mat-expansion-panel-header>
 
 		<mat-form-field appearance="outline" class="full-width">

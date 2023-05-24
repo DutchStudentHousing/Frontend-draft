@@ -1,1 +1,78 @@
-<p>home works!</p>
+<div class="home-container">
+	<h1>Welcome to Dutch Student Housing, over X properties</h1>
+	<mat-card [formGroup]="search" class="search">
+		<mat-form-field appearance="outline" floatLabel="always">
+			<mat-label>Search for city or postal code</mat-label>
+			<input formControlName="query" matInput placeholder="Type here..." type="search">
+		</mat-form-field>
+		<mat-form-field appearance="outline" floatLabel="always">
+			<mat-label>min. Rent</mat-label>
+			<input #minRent [max]="maxRent.value" formControlName="minRent" matInput step="50" type="number">
+			<span matTextPrefix>€&nbsp;</span>
+		</mat-form-field>
+		<mat-form-field appearance="outline" floatLabel="always">
+			<mat-label>max. Rent</mat-label>
+			<input #maxRent [min]="minRent.value" formControlName="maxRent" matInput step="50" type="number">
+			<span matTextPrefix>€&nbsp;</span>
+		</mat-form-field>
+		<button color="primary" mat-raised-button routerLink="/search">
+			<mat-icon>search</mat-icon>
+			Search
+		</button>
+	</mat-card>
+	<div class="box-3">
+		<mat-card>
+			<div class="card-header">
+				<mat-card-title>Find properties</mat-card-title>
+			</div>
+			<mat-divider></mat-divider>
+			<mat-card-content>
+				<p>Your content here</p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card>
+			<div class="card-header">
+				<mat-card-title>About us</mat-card-title>
+			</div>
+			<mat-divider></mat-divider>
+			<mat-card-content>
+				<p>Your content here</p>
+			</mat-card-content>
+		</mat-card>
+		<mat-card>
+			<div class="card-header">
+				<mat-card-title>Rent properties</mat-card-title>
+			</div>
+			<mat-divider></mat-divider>
+			<mat-card-content>
+				<p>Are you a property owner looking to tap into the thriving student rental market in the Netherlands?
+					Look no further! Dutch Student Housing is here to help you find the perfect tenants for your
+					property while providing you with valuable insights and statistics to make informed decisions.</p>
+				<ul>
+					<li>Potential Candidates: Review detailed profiles of potential tenants, making an informed choice
+						for your property.
+					</li>
+					<li>Average Statistics: Get up-to-date insights on rental prices, occupancy rates, and demand in top
+						student cities.
+					</li>
+					<li>Benefits: Extensive tenant network, streamlined rental process, verified profiles, and dedicated
+						support.
+					</li>
+				</ul>
+				<p>Maximize your rental income with Dutch Student Housing. Join today and make the most of your
+					investment!</p>
+			</mat-card-content>
+			<mat-divider></mat-divider>
+			<mat-card-actions>
+				<button mat-stroked-button>
+					<mat-icon>assessment</mat-icon>
+					See statistics in your city
+				</button>
+				<button mat-stroked-button>
+					<mat-icon>add</mat-icon>
+					Add your property
+				</button>
+			</mat-card-actions>
+		</mat-card>
+	</div>
+</div>
