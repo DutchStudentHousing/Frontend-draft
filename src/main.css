@@ -6,10 +6,20 @@ body {
 	background: #FAFAFA;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	margin: 0;
+	display: flex;
+	flex-direction: column;
 }
 
 html, body {
-	height: calc(100vh - 64px);
+	min-height: 100vh;
+}
+
+app-root {
+	min-height: 100%;
+}
+
+app-footer {
+	margin-top: auto;
 }
 
 .inbox-popup {

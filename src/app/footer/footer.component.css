@@ -1,0 +1,9 @@
+mat-toolbar {
+	display: flex;
+	gap: 8px;
+}
+
+span {
+	font-weight: 400;
+	font-size: 15px;
+}

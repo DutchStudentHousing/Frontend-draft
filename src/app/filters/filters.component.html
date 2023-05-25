@@ -109,12 +109,11 @@
 			<mat-panel-title>
 				<mat-slide-toggle (click)="$event.stopPropagation()" [disabled]="cities.length === 0"
 					color="primary"></mat-slide-toggle>
-				City
+				City or postal code
 			</mat-panel-title>
 			<mat-panel-description
 				matTooltip="{{ cities.join(', ') }}">{{ countNumberOfCities() }}</mat-panel-description>
 		</mat-expansion-panel-header>
-
 		<mat-form-field appearance="outline" class="full-width" floatLabel="always">
 			<mat-label>Show properties in city</mat-label>
 			<mat-chip-grid #chipGrid aria-label="City selection">
@@ -127,6 +126,7 @@
 			</mat-chip-grid>
 			<input #cityInput [formControl]="citiesFormControl" [matAutocomplete]="auto" [matChipInputFor]="chipGrid"
 				[matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="Enter city name..."/>
+			<mat-hint *ngIf="cities.length !== 0">{{ countNumberOfCities() }} selected</mat-hint>
 			<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCity($event)" autoActiveFirstOption>
 				<mat-option *ngFor="let city of filteredCities | async | slice:0:5" [value]="city">
 					{{city}}

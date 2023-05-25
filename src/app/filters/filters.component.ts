@@ -20,6 +20,7 @@ export class FiltersComponent implements OnInit {
 		{key: 'anti_squat', label: 'Anti-squat'},
 		{key: 'student_residence', label: 'Student residence'}
 	];
+
 	facilitiesRules: { key: string, label: string }[] = [
 		{key: 'furnished', label: 'Furnished'},
 		{key: 'internet', label: 'Internet included'},
@@ -30,6 +31,7 @@ export class FiltersComponent implements OnInit {
 
 	propertyTypeFG: FormGroup = this.createFormGroup(this.propertyTypes);
 	facilitiesRulesFG: FormGroup = this.createFormGroup(this.facilitiesRules);
+
 	// Rent input
 	rent: Slider = {
 		step: 50,
@@ -38,6 +40,7 @@ export class FiltersComponent implements OnInit {
 		min: null,
 		max: null,
 	};
+
 	// Surface input
 	surface: Slider = {
 		step: 5,
@@ -46,6 +49,7 @@ export class FiltersComponent implements OnInit {
 		min: null,
 		max: null,
 	};
+
 	// Energy label input
 	energyLabels: string[] = ["A", "B", "C", "D", "E", "F"];
 	selectedLabels: string[] = [];
@@ -80,7 +84,7 @@ export class FiltersComponent implements OnInit {
 	// Check filter status
 	countEnabledToggles = (formGroup: FormGroup): string => {
 		const enabledCount = Object.values(formGroup.value).filter(value => value).length;
-		return enabledCount > 0 ? `${enabledCount} enabled` : '';
+		return enabledCount > 0 ? `${enabledCount} selected` : '';
 	};
 
 	allCheckboxesUnselected = (formGroup: FormGroup): boolean => {
@@ -150,7 +154,7 @@ export class FiltersComponent implements OnInit {
 			calculatedMin = Math.max(max - step, limitMin);
 		}
 
-		min = (max === limitMin) ? 0 : calculatedMin;
+		min = (max === limitMin) ? step : calculatedMin;
 		if (max > limitMax) {
 			min -= step;
 			max = limitMax;

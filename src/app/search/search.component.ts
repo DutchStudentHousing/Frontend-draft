@@ -3,7 +3,7 @@ import {Router} from "@angular/router";
 
 interface Sort {
 	value: string;
-	viewValue: string;
+	label: string;
 }
 
 @Component({
@@ -20,16 +20,20 @@ export class SearchComponent {
 	}
 
 	filters: Sort[] = [
-		{value: 'name', viewValue: 'Name'},
-		{value: 'added', viewValue: 'Date added'},
-		{value: 'rent', viewValue: 'Rent per month'},
-		{value: 'surface', viewValue: 'Surface'},
-		{value: 'rentSurface', viewValue: 'Rent per square metre'},
+		{value: 'name', label: 'Name'},
+		{value: 'added', label: 'Date added'},
+		{value: 'rent', label: 'Rent per month'},
+		{value: 'surface', label: 'Surface'},
+		{value: 'rentSurface', label: 'Rent per square metre'},
 	];
 
-	icon = 'south';
+	// Sorting direction
+	icon: string = "south";
+	direction: string = "Ascending";
 
-	toggleIcon = () => {
-		this.icon = this.icon === 'south' ? 'north' : 'south';
-	};
+	toggleIcon(event: MouseEvent): void {
+		event.stopPropagation();
+		this.icon = this.icon === "south" ? "north" : "south";
+		this.direction = this.direction === "Ascending" ? "Descending" : "Ascending";
+	}
 }

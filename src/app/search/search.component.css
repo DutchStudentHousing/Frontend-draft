@@ -1,17 +1,14 @@
-mat-drawer-container {
-	min-height: calc(100% - 64px);
-}
-
 mat-drawer {
 	min-width: 340px;
 }
 
-.properties-header {
+.search-header {
 	align-items: baseline;
 	display: flex;
 	gap: 24px;
 	justify-content: space-between;
 	padding: 24px;
+	transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 h1 {

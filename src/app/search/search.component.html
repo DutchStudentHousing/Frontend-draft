@@ -3,29 +3,20 @@
 		<app-filters></app-filters>
 	</mat-drawer>
 	<mat-drawer-content>
-		<div class="properties-header">
+		<div class="search-header">
 			<h1>Search results</h1>
 
-			<mat-form-field appearance="outline" style="margin-bottom: -1.25em;">
-				<mat-label>Search query</mat-label>
-				<input matInput>
-			</mat-form-field>
-
 			<mat-form-field *ngIf="isRouteActive('/search/list')" appearance="outline" style="margin-bottom: -1.25em;">
-				<mat-label>Sort on</mat-label>
+				<mat-label>Sort on...</mat-label>
 				<mat-select value="added">
 					<mat-option *ngFor="let sort of filters" [value]="sort.value">
-						{{sort.viewValue}}
+						{{sort.label}}
 					</mat-option>
 				</mat-select>
-			</mat-form-field>
-
-			<mat-button-toggle-group *ngIf="isRouteActive('/search/list')" aria-label="Sort" name="sortby">
-				<mat-button-toggle (click)="toggleIcon()" value="asc">
+				<button (click)="toggleIcon($event)" [matTooltip]="direction" mat-icon-button matSuffix>
 					<mat-icon>{{icon}}</mat-icon>
-					<mat-icon>sort</mat-icon>
-				</mat-button-toggle>
-			</mat-button-toggle-group>
+				</button>
+			</mat-form-field>
 
 			<mat-button-toggle-group aria-label="Select view mode" name="viewToggle" value="grid">
 				<mat-button-toggle routerLink="/search/list" routerLinkActive="mat-button-toggle-checked">

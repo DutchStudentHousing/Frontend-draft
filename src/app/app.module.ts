@@ -44,9 +44,10 @@ import {HomeComponent} from './home/home.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {NgOptimizedImage} from "@angular/common";
 import {SearchMapComponent} from './search-map/search-map.component';
+import {FooterComponent} from './footer/footer.component';
 
 @NgModule({
-	bootstrap: [MenuComponent, AppComponent],
+	bootstrap: [MenuComponent, AppComponent, FooterComponent],
 	declarations: [
 		AppComponent,
 		MenuComponent,
@@ -57,7 +58,8 @@ import {SearchMapComponent} from './search-map/search-map.component';
 		SearchGridComponent,
 		DetailComponent,
 		HomeComponent,
-		SearchMapComponent
+		SearchMapComponent,
+		FooterComponent
 	],
 	imports: [
 		BrowserModule,
