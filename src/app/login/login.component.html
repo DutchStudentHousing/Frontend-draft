@@ -1,60 +1,70 @@
 <mat-tab-group dynamicHeight>
-	<mat-tab label="Login">
-		<mat-dialog-content>
-			<mat-form-field appearance="outline">
+	<mat-tab [formGroup]="login" label="Login">
+		<form mat-dialog-content>
+			<mat-form-field>
 				<mat-label>Enter your username</mat-label>
-				<input matInput>
-				<mat-icon matSuffix>account_circle</mat-icon>
+				<input autocomplete="username" formControlName="username" matInput/>
+				<mat-icon matPrefix>account_circle</mat-icon>
 			</mat-form-field>
-			<mat-form-field appearance="outline">
+
+			<mat-form-field>
 				<mat-label>Enter your password</mat-label>
-				<input matInput [type]="hidePassword ? 'password' : 'text'">
-				<button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-						[attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-					<mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-				</button>
+				<input autocomplete="current-password" formControlName="password" matInput type="password"/>
+				<mat-icon matPrefix>key</mat-icon>
 			</mat-form-field>
-		</mat-dialog-content>
-		<mat-dialog-actions align="end">
-			<button mat-stroked-button mat-dialog-close>Cancel</button>
-			<button mat-flat-button mat-dialog-close color="primary">Login</button>
-		</mat-dialog-actions>
+
+			<mat-dialog-actions>
+				<button mat-dialog-close mat-stroked-button>Cancel</button>
+				<button [disabled]="!login.valid" color="primary" mat-dialog-close mat-flat-button>Login</button>
+			</mat-dialog-actions>
+		</form>
 	</mat-tab>
+
 	<mat-tab label="Create account">
-		<mat-stepper orientation="horizontal" [linear]="false" labelPosition="bottom" #stepper>
-			<mat-step [stepControl]="firstFormGroup">
-				<form [formGroup]="firstFormGroup">
-					<ng-template matStepLabel>Personal details</ng-template>
-					<mat-form-field appearance="fill">
+		<mat-stepper #stepper labelPosition="bottom" linear="true">
+			<mat-step [stepControl]="registerStepOne">
+				<form [formGroup]="registerStepOne" mat-dialog-content>
+					<ng-template matStepLabel>Account</ng-template>
+
+					<mat-form-field>
 						<mat-label>Enter your e-mail</mat-label>
-						<input matInput type="email">
-						<mat-icon matSuffix>mail</mat-icon>
+						<mat-icon matPrefix>mail</mat-icon>
+						<input formControlName="email" matInput type="email">
+						<mat-error
+							*ngIf="registerStepOne.get('email')?.invalid && registerStepOne.get('email')?.touched">
+							<ng-container *ngIf="registerStepOne.get('email')?.errors?.['required']">
+								Email is required.
+							</ng-container>
+							<ng-container *ngIf="registerStepOne.get('email')?.errors?.['email']">
+								Please enter a valid email address.
+							</ng-container>
+						</mat-error>
 					</mat-form-field>
-					<mat-form-field appearance="fill">
+
+					<mat-form-field>
 						<mat-label>Enter your username</mat-label>
-						<input matInput>
-						<mat-icon matSuffix>account_circle</mat-icon>
+						<input autocomplete formControlName="username" matInput>
+						<mat-icon matPrefix>account_circle</mat-icon>
 					</mat-form-field>
-					<mat-form-field appearance="fill">
+
+					<mat-form-field>
 						<mat-label>Enter your password</mat-label>
-						<input matInput [type]="hidePassword ? 'password' : 'text'">
-						<button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-								[attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-							<mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-						</button>
+						<input autocomplete="new-password" formControlName="password" matInput type="password">
+						<mat-icon matPrefix>key</mat-icon>
 					</mat-form-field>
-					<div>
-						<button mat-button matStepperNext>Next</button>
-					</div>
+
+					<mat-dialog-actions align="end">
+						<button color="primary" mat-flat-button matStepperNext>Next</button>
+					</mat-dialog-actions>
 				</form>
 			</mat-step>
 			<mat-step [stepControl]="secondFormGroup" optional>
-				<form [formGroup]="secondFormGroup">
+				<form [formGroup]="secondFormGroup" mat-dialog-content>
 					<ng-template matStepLabel>Tell us about yourself</ng-template>
-					<mat-form-field appearance="fill">
+					<mat-form-field>
 						<mat-label>Address</mat-label>
 						<input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-							   required>
+							required>
 					</mat-form-field>
 					<div>
 						<button mat-button matStepperPrevious>Back</button>

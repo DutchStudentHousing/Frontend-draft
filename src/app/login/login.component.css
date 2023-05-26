@@ -1,9 +1,13 @@
-mat-dialog-content, form {
-	align-items: flex-start;
-	display: flex;
-	flex-direction: column;
-}
-
 mat-stepper {
 	min-width: 750px;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+mat-dialog-actions {
+	justify-content: space-between;
 }

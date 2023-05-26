@@ -45,6 +45,7 @@ import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {NgOptimizedImage} from "@angular/common";
 import {SearchMapComponent} from './search-map/search-map.component';
 import {FooterComponent} from './footer/footer.component';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent, FooterComponent],
@@ -100,7 +101,12 @@ import {FooterComponent} from './footer/footer.component';
 		LeafletModule,
 		NgOptimizedImage
 	],
-	providers: []
+	providers: [
+		{
+			provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+			useValue: {appearance: 'outline', floatLabel: 'always', subscriptSizing: 'dynamic'}
+		}
+	]
 })
 
 export class AppModule {

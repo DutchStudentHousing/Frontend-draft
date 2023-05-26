@@ -11,16 +11,16 @@
 </div>
 
 <mat-accordion displayMode="flat">
-	<mat-expansion-panel id="filter-property-type">
+	<mat-expansion-panel [formGroup]="propertyTypeFG" id="filter-property-type">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
 				<mat-slide-toggle (click)="$event.stopPropagation()"
 					[disabled]="allCheckboxesUnselected(propertyTypeFG)" color="primary"></mat-slide-toggle>
 				Property type
 			</mat-panel-title>
-			<mat-panel-description>{{ countEnabledToggles(propertyTypeFG) }}</mat-panel-description>
+			<mat-panel-description>{{ countEnabledCheckboxes(propertyTypeFG) }}</mat-panel-description>
 		</mat-expansion-panel-header>
-		<div [formGroup]="propertyTypeFG" class="filters-horizontal">
+		<div class="filters-horizontal">
 			<section>
 				<mat-checkbox *ngFor="let property of propertyTypes"
 					[formControlName]="property.key">{{ property.label }}</mat-checkbox>
@@ -50,13 +50,13 @@
 			</section>
 
 			<section class="filters-numbers">
-				<mat-form-field appearance="outline">
+				<mat-form-field>
 					<mat-label>Min</mat-label>
 					<input (input)="updatePanel(rent, 'start')" [(ngModel)]="rent.min" [max]="rent.limitMax"
 						[min]="rent.limitMin" [step]="rent.step" matInput required type="number"/>
 					<span matTextPrefix>€&nbsp;</span>
 				</mat-form-field>
-				<mat-form-field appearance="outline">
+				<mat-form-field>
 					<mat-label>Max</mat-label>
 					<input (input)="updatePanel(rent, 'end')" [(ngModel)]="rent.max" [max]="rent.limitMax"
 						[min]="rent.limitMin" [step]="rent.step" matInput required type="number"/>
@@ -88,13 +88,13 @@
 			</section>
 
 			<section class="filters-numbers">
-				<mat-form-field appearance="outline">
+				<mat-form-field>
 					<mat-label>Min</mat-label>
 					<input (input)="updatePanel(surface, 'start')" [(ngModel)]="surface.min"
 						[min]="surface.limitMin" [step]="surface.step" matInput required type="number"/>
 					<span matTextSuffix>&nbsp;M²</span>
 				</mat-form-field>
-				<mat-form-field appearance="outline">
+				<mat-form-field>
 					<mat-label>Max</mat-label>
 					<input (input)="updatePanel(surface, 'end')" [(ngModel)]="surface.max" [max]="surface.limitMax"
 						[step]="surface.step" matInput required type="number"/>
@@ -114,7 +114,7 @@
 			<mat-panel-description
 				matTooltip="{{ cities.join(', ') }}">{{ countNumberOfCities() }}</mat-panel-description>
 		</mat-expansion-panel-header>
-		<mat-form-field appearance="outline" class="full-width" floatLabel="always">
+		<mat-form-field class="full-width" floatLabel="always">
 			<mat-label>Show properties in city</mat-label>
 			<mat-chip-grid #chipGrid aria-label="City selection">
 				<mat-chip-row (removed)="removeCity(city)" *ngFor="let city of cities">
@@ -143,54 +143,13 @@
 			</mat-panel-title>
 		</mat-expansion-panel-header>
 		<div class="filters-horizontal">
-			<span>Kitchen</span>
-			<section>
-				<mat-button-toggle-group multiple name="kitchen">
-					<mat-button-toggle value="own">
-						<mat-icon>face</mat-icon>
-						Own
-					</mat-button-toggle>
-					<mat-button-toggle value="shares">
-						<mat-icon>groups</mat-icon>
-						Shared
-					</mat-button-toggle>
-					<mat-button-toggle value="none">
-						<mat-icon>not_interested</mat-icon>
-						None
-					</mat-button-toggle>
-				</mat-button-toggle-group>
-			</section>
-			<span>Bathroom</span>
-			<section>
-				<mat-button-toggle-group multiple name="bathroom">
-					<mat-button-toggle value="own">
-						<mat-icon>face</mat-icon>
-						Own
-					</mat-button-toggle>
-					<mat-button-toggle value="shares">
-						<mat-icon>groups</mat-icon>
-						Shared
-					</mat-button-toggle>
-					<mat-button-toggle value="none">
-						<mat-icon>not_interested</mat-icon>
-						None
-					</mat-button-toggle>
-				</mat-button-toggle-group>
-			</section>
-			<span>Living room</span>
-			<section>
-				<mat-button-toggle-group multiple name="living_room">
-					<mat-button-toggle value="own">
-						<mat-icon>face</mat-icon>
-						Own
-					</mat-button-toggle>
-					<mat-button-toggle value="shares">
-						<mat-icon>groups</mat-icon>
-						Shared
-					</mat-button-toggle>
-					<mat-button-toggle value="none">
-						<mat-icon>not_interested</mat-icon>
-						None
+			<section *ngFor="let room of rooms">
+				<span>{{ room.name }}</span>
+				<mat-button-toggle-group [name]="room.controlName" multiple>
+					<mat-button-toggle *ngFor="let option of room.options" [formControl]="option.formControl"
+						[value]="option.value">
+						<mat-icon>{{ option.icon }}</mat-icon>
+						{{ option.label }}
 					</mat-button-toggle>
 				</mat-button-toggle-group>
 			</section>
@@ -204,7 +163,7 @@
 					[disabled]="allCheckboxesUnselected(facilitiesRulesFG)" color="primary"></mat-slide-toggle>
 				Facilities and rules
 			</mat-panel-title>
-			<mat-panel-description>{{ countEnabledToggles(facilitiesRulesFG) }}</mat-panel-description>
+			<mat-panel-description>{{ countEnabledCheckboxes(facilitiesRulesFG) }}</mat-panel-description>
 		</mat-expansion-panel-header>
 		<div [formGroup]="facilitiesRulesFG" class="filters-horizontal">
 			<section>
@@ -218,7 +177,8 @@
 	<mat-expansion-panel id="filter-energy-label">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
-				<mat-slide-toggle (click)="$event.stopPropagation()" color="primary"></mat-slide-toggle>
+				<mat-slide-toggle (click)="$event.stopPropagation()" [disabled]="selectedLabels.length === 0"
+					color="primary"></mat-slide-toggle>
 				Energy label
 			</mat-panel-title>
 			<mat-panel-description>
@@ -238,7 +198,7 @@
 			</mat-panel-title>
 		</mat-expansion-panel-header>
 
-		<mat-form-field appearance="outline" class="full-width">
+		<mat-form-field class="full-width">
 			<input [matDatepicker]="picker" matInput placeholder="Choose a date range">
 			<mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
 			<mat-datepicker #picker></mat-datepicker>

@@ -2,19 +2,19 @@
 	<h1>Welcome to Dutch Student Housing, over X properties</h1>
 
 	<mat-card [formGroup]="search" class="search">
-		<mat-form-field appearance="outline" floatLabel="always">
+		<mat-form-field>
 			<mat-label>Search for city or postal code</mat-label>
 			<input formControlName="query" matInput placeholder="Type here..." required type="search">
 		</mat-form-field>
 
-		<mat-form-field appearance="outline" floatLabel="always">
+		<mat-form-field>
 			<mat-label>min. Rent</mat-label>
 			<input [max]="search.value.maxRent" [min]="rent.limitMin" [step]="rent.step" formControlName="minRent"
 				matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline" floatLabel="always">
+		<mat-form-field>
 			<mat-label>max. Rent</mat-label>
 			<input [max]="rent.limitMax" [min]="search.value.minRent" [step]="rent.step" formControlName="maxRent"
 				matInput type="number"/>

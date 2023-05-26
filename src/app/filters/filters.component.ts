@@ -29,6 +29,33 @@ export class FiltersComponent implements OnInit {
 		{key: 'smoking', label: 'Smoking allowed'}
 	];
 
+	rooms = [
+		{
+			name: 'Kitchen',
+			controlName: 'kitchen',
+			options: [
+				{value: 'own', icon: 'face', label: 'Own', formControl: new FormControl(false)},
+				{value: 'shared', icon: 'groups', label: 'Shared', formControl: new FormControl(false)}
+			]
+		},
+		{
+			name: 'Bathroom',
+			controlName: 'bathroom',
+			options: [
+				{value: 'own', icon: 'face', label: 'Own', formControl: new FormControl(false)},
+				{value: 'shared', icon: 'groups', label: 'Shared', formControl: new FormControl(false)}
+			]
+		},
+		{
+			name: 'Living room',
+			controlName: 'living_room',
+			options: [
+				{value: 'own', icon: 'face', label: 'Own', formControl: new FormControl(false)},
+				{value: 'shared', icon: 'groups', label: 'Shared', formControl: new FormControl(false)}
+			]
+		}
+	];
+
 	propertyTypeFG: FormGroup = this.createFormGroup(this.propertyTypes);
 	facilitiesRulesFG: FormGroup = this.createFormGroup(this.facilitiesRules);
 
@@ -82,7 +109,7 @@ export class FiltersComponent implements OnInit {
 	}
 
 	// Check filter status
-	countEnabledToggles = (formGroup: FormGroup): string => {
+	countEnabledCheckboxes = (formGroup: FormGroup): string => {
 		const enabledCount = Object.values(formGroup.value).filter(value => value).length;
 		return enabledCount > 0 ? `${enabledCount} selected` : '';
 	};

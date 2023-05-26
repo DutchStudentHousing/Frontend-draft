@@ -6,6 +6,10 @@ mat-divider {
 	margin: 0 8px;
 }
 
+mat-card-title, .mat-mdc-card-image {
+	cursor: pointer;
+}
+
 mat-card-subtitle {
 	display: flex;
 	justify-content: space-evenly;

@@ -6,7 +6,7 @@
 		<div class="search-header">
 			<h1>Search results</h1>
 
-			<mat-form-field *ngIf="isRouteActive('/search/list')" appearance="outline" style="margin-bottom: -1.25em;">
+			<mat-form-field *ngIf="isRouteActive('/search/list')">
 				<mat-label>Sort on...</mat-label>
 				<mat-select value="added">
 					<mat-option *ngFor="let sort of filters" [value]="sort.value">
