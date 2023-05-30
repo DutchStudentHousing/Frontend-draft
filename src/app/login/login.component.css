@@ -1,7 +1,3 @@
-mat-stepper {
-	min-width: 750px;
-}
-
 form {
 	display: flex;
 	flex-direction: column;

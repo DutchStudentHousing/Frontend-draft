@@ -1,4 +1,4 @@
-export interface propertyDetails {
+export interface PropertyDetails {
 	additionalCosts: number;
 	address: string;
 	bathroom: boolean;

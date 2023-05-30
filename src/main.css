@@ -6,20 +6,33 @@ body {
 	background: #FAFAFA;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	margin: 0;
-	display: flex;
-	flex-direction: column;
 }
 
 html, body {
-	min-height: 100vh;
+	height: 100%;
+}
+
+.app {
+	display: flex;
+	flex-flow: row wrap;
+	height: 100%;
+}
+
+app-menu {
+	order: 1;
+	flex: 0 1 100%;
 }
 
 app-root {
-	min-height: 100%;
+	order: 2;
+	flex: 0 1 100%;
+	min-height: calc(100% - 128px);
+	overflow: hidden;
 }
 
 app-footer {
-	margin-top: auto;
+	order: 3;
+	flex: 0 1 100%;
 }
 
 .inbox-popup {

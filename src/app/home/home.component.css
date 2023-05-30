@@ -21,9 +21,6 @@ h1 {
 
 .search mat-form-field, .search button {
 	zoom: 1.5;
-	margin: 0;
-	flex-direction: unset;
-	width: 100%;
 }
 
 .box-3 {

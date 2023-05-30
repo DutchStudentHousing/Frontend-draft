@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {LocationDetails} from "./locationDetails";
-import {propertyDetails} from "./propertyDetails"
+import {PropertyDetails} from "./propertyDetails"
+import {Router} from "@angular/router";
 
 @Component({
 	selector: 'app-detail',
@@ -11,7 +12,7 @@ import {propertyDetails} from "./propertyDetails"
 })
 export class DetailComponent implements OnInit {
 	// Property details
-	details: propertyDetails = {
+	details: PropertyDetails = {
 		additionalCosts: 100,
 		address: "Laan Corpus den Hoorn 106",
 		bathroom: true,
@@ -40,6 +41,9 @@ export class DetailComponent implements OnInit {
 		matchGender: "male",
 		matchPeople: 5
 	};
+
+	constructor(private router: Router) {
+	}
 
 	// Nearby locations
 	options: L.MapOptions = {
@@ -323,7 +327,6 @@ export class DetailComponent implements OnInit {
 		return [];
 	}
 
-
 	calculateDistanceToProperty(location: LocationDetails): number | null {
 		const propertyLocation = this.nearbyLocations.find(loc => loc.label === 'Property');
 		if (propertyLocation) {
@@ -331,5 +334,10 @@ export class DetailComponent implements OnInit {
 			return Math.floor(distance);
 		}
 		return null;
+	}
+
+	// Navigate to section
+	navigateToAnchor(anchorId: string) {
+		this.router.navigate([], {fragment: anchorId});
 	}
 }

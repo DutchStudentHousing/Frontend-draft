@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
 			password: ['', Validators.required]
 		});
 		this.registerStepOne = this.formBuilder.group({
-			username: ['', Validators.required],
-			password: ['', Validators.required],
-			email: ['', Validators.required, Validators.email]
+			new_username: ['', Validators.required],
+			new_password: ['', Validators.required],
+			new_email: ['', [Validators.required, Validators.email]]
 		});
 	}
 }

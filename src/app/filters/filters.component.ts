@@ -1,18 +1,18 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Slider} from "./slider";
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 
 @Component({
 	selector: 'app-filters',
 	styleUrls: ['./filters.component.css'],
 	templateUrl: './filters.component.html'
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent {
 	propertyTypes: { key: string, label: string }[] = [
 		{key: 'room', label: 'Room'},
 		{key: 'apartment', label: 'Apartment'},
@@ -63,7 +63,7 @@ export class FiltersComponent implements OnInit {
 	rent: Slider = {
 		step: 50,
 		limitMin: 50,
-		limitMax: 5000,
+		limitMax: 2500,
 		min: null,
 		max: null,
 	};
@@ -82,7 +82,7 @@ export class FiltersComponent implements OnInit {
 	selectedLabels: string[] = [];
 
 	// Constructor
-	constructor(private route: ActivatedRoute, private formBuilder: FormBuilder) {
+	constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
 		this.filteredCities = this.citiesFormControl.valueChanges.pipe(
 			startWith(null),
 			map((value) => {
@@ -95,15 +95,15 @@ export class FiltersComponent implements OnInit {
 	}
 
 	// Receive values from query parameters
-	ngOnInit() {
+	ngOnInit(): void {
 		this.route.queryParamMap.subscribe((params: ParamMap) => {
 			const minRent = params.get('minRent');
 			const maxRent = params.get('maxRent');
 
 			this.rent = {
 				...this.rent,
-				min: minRent ? parseInt(minRent, 10) : null,
-				max: maxRent ? parseInt(maxRent, 10) : null,
+				min: minRent ? parseInt(minRent, 10) : this.rent.min,
+				max: maxRent ? parseInt(maxRent, 10) : this.rent.max,
 			};
 		});
 	}
@@ -170,25 +170,32 @@ export class FiltersComponent implements OnInit {
 
 	// Slider panels
 	updatePanel = (panel: any, thumb: string) => {
-		let {min, max, step, limitMin, limitMax} = panel;
+		const {min, max, step, limitMin, limitMax} = panel;
 
 		let calculatedMin = Math.max(Math.floor(min / step) * step, limitMin);
-		max = Math.min(Math.floor(max / step) * step, limitMax);
+		let calculatedMax = Math.min(Math.floor(max / step) * step, limitMax);
 
-		if (thumb === 'start' && calculatedMin > max - step) {
-			max = Math.min(calculatedMin + step, limitMax);
-		} else if (thumb === 'end' && max < calculatedMin + step) {
-			calculatedMin = Math.max(max - step, limitMin);
+		if (thumb === 'start' && calculatedMin > calculatedMax - step) {
+			calculatedMax = Math.min(calculatedMin + step, limitMax);
+		} else if (thumb === 'end' && calculatedMax < calculatedMin + step) {
+			calculatedMin = Math.max(calculatedMax - step, limitMin);
 		}
 
-		min = (max === limitMin) ? step : calculatedMin;
-		if (max > limitMax) {
-			min -= step;
-			max = limitMax;
+		if (calculatedMax > limitMax) {
+			calculatedMin -= step;
+			calculatedMax = limitMax;
 		}
 
-		panel.min = min;
-		panel.max = max;
+		this.router.navigate([], {
+			queryParams: {
+				min: calculatedMin.toString(),
+				max: calculatedMax.toString()
+			},
+			queryParamsHandling: 'merge'
+		});
+
+		panel.min = calculatedMin;
+		panel.max = calculatedMax;
 	};
 
 	private createFormGroup(options: { key: string; label: string }[]): FormGroup {

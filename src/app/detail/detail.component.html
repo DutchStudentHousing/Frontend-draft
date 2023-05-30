@@ -24,16 +24,15 @@
 		</button>
 	</div>
 
-	<div class="toc">
-		<h2>Navigate to...</h2>
+	<div class="pane">
+		<div class="toc">
+			<h2>Navigate to...</h2>
 
-		<div class="list">
-			<button mat-stroked-button>Details</button>
-			<button mat-stroked-button>Images</button>
-			<button mat-stroked-button>Description</button>
-			<button mat-stroked-button>Looking for</button>
-			<button mat-stroked-button>In this area</button>
-			<button mat-stroked-button>Nearby properties</button>
+			<button (click)="navigateToAnchor('details')" mat-stroked-button>Details</button>
+			<button (click)="navigateToAnchor('description')" mat-stroked-button>Description</button>
+			<button (click)="navigateToAnchor('match')" mat-stroked-button>Looking for</button>
+			<button (click)="navigateToAnchor('in-this-area')" mat-stroked-button>In this area</button>
+			<button (click)="navigateToAnchor('nearby-properties$')" mat-stroked-button>Nearby properties</button>
 		</div>
 	</div>
 
@@ -137,7 +136,7 @@
 				<img alt="Photo of a Shiba Inu" mat-card-image
 					src="https://material.angular.io/assets/img/examples/shiba2.jpg">
 			</mat-card>
-			<mat-card>
+			<mat-card id="description">
 				<div class="card-header">
 					<mat-card-title>Property description</mat-card-title>
 				</div>
@@ -181,7 +180,7 @@
 					house!
 				</p>
 			</mat-card>
-			<mat-card>
+			<mat-card id="match">
 				<div class="card-header">
 					<mat-card-title>Looking for...</mat-card-title>
 				</div>
@@ -216,7 +215,7 @@
 					</div>
 				</div>
 			</mat-card>
-			<mat-card>
+			<mat-card id="in-this-area">
 				<div class="card-header">
 					<mat-card-title>In this area</mat-card-title>
 				</div>
@@ -260,15 +259,15 @@
 					</mat-nav-list>
 				</div>
 			</mat-card>
-			<mat-card>
+			<mat-card id="nearby-properties">
 				<div class="card-header">
-					<mat-card-title>Other nearby properties</mat-card-title>
+					<mat-card-title>Other nearby properties$</mat-card-title>
 				</div>
 				<mat-divider></mat-divider>
 				<mat-card-actions align="end">
 					<button mat-stroked-button routerLink="/detail">
 						<mat-icon>place</mat-icon>
-						Show other nearby properties
+						Show other nearby properties$
 					</button>
 				</mat-card-actions>
 			</mat-card>

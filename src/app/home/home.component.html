@@ -2,6 +2,8 @@
 	<h1>Welcome to Dutch Student Housing, over X properties</h1>
 
 	<mat-card [formGroup]="search" class="search">
+		<div class="spacer"></div>
+
 		<mat-form-field>
 			<mat-label>Search for city or postal code</mat-label>
 			<input formControlName="query" matInput placeholder="Type here..." required type="search">
@@ -28,6 +30,8 @@
 			<mat-icon>search</mat-icon>
 			Search
 		</button>
+
+		<div class="spacer"></div>
 	</mat-card>
 
 	<div class="box-3">

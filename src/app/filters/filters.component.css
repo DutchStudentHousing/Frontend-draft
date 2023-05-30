@@ -1,7 +1,3 @@
-mat-expansion-panel {
-	border-radius: 0 !important;
-}
-
 .mat-expanded mat-panel-description {
 	display: none;
 }
@@ -22,7 +18,12 @@ mat-panel-title mat-slide-toggle {
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
-	padding: 24px;
+	padding-bottom: 12px;
+	padding-top: 12px;
+}
+
+.filters-header:first-of-type {
+	padding-top: 0;
 }
 
 h2 {
@@ -46,7 +47,7 @@ section {
 section.filters-numbers {
 	gap: 16px;
 	flex-direction: row;
-	max-width: 260px;
+	max-width: 290px;
 }
 
 section.filters-numbers mat-form-field {
