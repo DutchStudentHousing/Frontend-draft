@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+//import {UserSearchComponent} from './usersearch/usersearch.component';
 import {DetailComponent} from "./detail/detail.component";
 import {SearchComponent} from "./search/search.component";
 import {HomeComponent} from "./home/home.component";

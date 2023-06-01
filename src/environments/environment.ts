@@ -1,3 +1,3 @@
 export const environment = {
-   url: 'localhost'
+   url: 'undefined'
 };

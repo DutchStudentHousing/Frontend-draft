@@ -50,6 +50,7 @@ import {ApiModule} from "./api";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 import { environment } from './../environments/environment';
+import { UsersearchComponent } from './usersearch/usersearch.component';
 
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent, FooterComponent],
@@ -63,7 +64,8 @@ import { environment } from './../environments/environment';
 		DetailComponent,
 		HomeComponent,
 		SearchMapComponent,
-		FooterComponent
+		FooterComponent,
+  UsersearchComponent
 	],
 	imports: [
 		BrowserModule,
@@ -104,7 +106,7 @@ import { environment } from './../environments/environment';
 		LeafletModule,
 		HttpClientModule,
 		MatProgressSpinnerModule,
-		ApiModule.forRoot({rootUrl: environment.url + '/api'}),
+		ApiModule.forRoot({rootUrl: 'http://192.168.2.8/api'}),
 		MatProgressBarModule
 	],
 	providers: [

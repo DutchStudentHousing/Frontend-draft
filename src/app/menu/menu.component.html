@@ -6,9 +6,14 @@
 
 	<span class="spacer"></span>
 
-	<button (click)="openLoginDialog()" aria-label="User" mat-icon-button matSuffix>
+	<button *ngIf="!token" (click)="openLoginDialog()" aria-label="User" mat-icon-button matSuffix>
 		<mat-icon>login</mat-icon>
 	</button>
+
+	<button *ngIf="token" (click)="logout()" aria-label="User" mat-icon-button matSuffix>
+		<mat-icon>logout</mat-icon>
+	</button>
+
 	<button [matMenuTriggerFor]="inbox" aria-label="Inbox" mat-icon-button matSuffix>
 		<mat-icon matBadge="10" matBadgeColor="warn">inbox</mat-icon>
 	</button>
@@ -16,6 +21,9 @@
 		<mat-icon>search</mat-icon>
 	</button>
 </mat-toolbar>
+
+<!--if auth guard Authenticate  -->
+
 
 <mat-menu #inbox="matMenu" class="inbox-popup" xPosition="before">
 	<mat-nav-list class="message-list">
