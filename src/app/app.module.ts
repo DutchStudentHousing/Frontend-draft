@@ -102,7 +102,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 		LeafletModule,
 		HttpClientModule,
 		MatProgressSpinnerModule,
-		ApiModule.forRoot({rootUrl: import.meta.env.NG_APP_BACKEND}),
+		ApiModule.forRoot({rootUrl: import.meta.env.NG_APP_BACKEND + '/api'}),
 		MatProgressBarModule
 	],
 	providers: [
