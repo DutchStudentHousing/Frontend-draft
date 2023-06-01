@@ -36,16 +36,18 @@ import {FiltersComponent} from './filters/filters.component';
 import {LoginComponent} from './login/login.component';
 
 import {MenuComponent} from './menu/menu.component';
-import {PropertyComponent} from './property/property.component';
 import {SearchGridComponent} from './search-grid/search-grid.component';
 import {SearchComponent} from './search/search.component';
 import {DetailComponent} from './detail/detail.component';
 import {HomeComponent} from './home/home.component';
 import {LeafletModule} from "@asymmetrik/ngx-leaflet";
-import {NgOptimizedImage} from "@angular/common";
 import {SearchMapComponent} from './search-map/search-map.component';
 import {FooterComponent} from './footer/footer.component';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
+import {HttpClientModule} from "@angular/common/http";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {ApiModule} from "./api";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent, FooterComponent],
@@ -53,7 +55,6 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 		AppComponent,
 		MenuComponent,
 		SearchComponent,
-		PropertyComponent,
 		FiltersComponent,
 		LoginComponent,
 		SearchGridComponent,
@@ -99,7 +100,10 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 		MatAutocompleteModule,
 		MatRippleModule,
 		LeafletModule,
-		NgOptimizedImage
+		HttpClientModule,
+		MatProgressSpinnerModule,
+		ApiModule.forRoot({rootUrl: import.meta.env.NG_APP_BACKEND}),
+		MatProgressBarModule
 	],
 	providers: [
 		{

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 
 interface Sort {
 	value: string;
@@ -12,28 +12,48 @@ interface Sort {
 	styleUrls: ['./search.component.css']
 })
 export class SearchComponent {
-	constructor(private router: Router) {
-	}
-
-	isRouteActive(routePath: string): boolean {
-		return this.router.url === routePath;
-	}
-
+	selectedSort!: string;
 	filters: Sort[] = [
 		{value: 'name', label: 'Name'},
+		{value: 'type', label: 'Type'},
 		{value: 'added', label: 'Date added'},
 		{value: 'rent', label: 'Rent per month'},
-		{value: 'surface', label: 'Surface'},
+		{value: 'sqm', label: 'Surface'},
 		{value: 'rentSurface', label: 'Rent per square metre'},
+		{value: 'city', label: 'City'}
 	];
+	direction = "Ascending";
 
-	// Sorting direction
-	icon: string = "south";
-	direction: string = "Ascending";
+	constructor(private route: ActivatedRoute, private router: Router) {
+	}
+
+	ngOnInit(): void {
+		this.route.queryParams.subscribe(params => {
+			this.selectedSort = params['sort'] || 'city';
+			this.direction = params['direction'] === 'ASC' ? 'Ascending' : 'Descending';
+		});
+		this.updateQueryParams();
+	}
+
+	onSortChange(): void {
+		this.updateQueryParams();
+	}
+
+	updateQueryParams(): void {
+		const sortDirection = this.direction === "Ascending" ? "ASC" : "DESC";
+		const queryParams: NavigationExtras = {
+			relativeTo: this.route,
+			queryParams: {sort: this.selectedSort, direction: sortDirection},
+			queryParamsHandling: 'merge'
+		};
+
+		this.router.navigate([], queryParams).then(() => {
+		});
+	}
 
 	toggleIcon(event: MouseEvent): void {
 		event.stopPropagation();
-		this.icon = this.icon === "south" ? "north" : "south";
 		this.direction = this.direction === "Ascending" ? "Descending" : "Ascending";
+		this.updateQueryParams();
 	}
 }

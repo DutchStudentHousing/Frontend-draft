@@ -1,24 +1,26 @@
-<mat-drawer-container autosize>
-	<mat-drawer mode="side" opened>
+<div class="page-search">
+
+	<div class="sidebar">
 		<app-filters></app-filters>
-	</mat-drawer>
-	<mat-drawer-content>
+	</div>
+
+	<div class="content">
 		<div class="search-header">
 			<h1>Search results</h1>
 
-			<mat-form-field *ngIf="isRouteActive('/search/list')">
+			<mat-form-field>
 				<mat-label>Sort on...</mat-label>
-				<mat-select value="added">
+				<mat-select (ngModelChange)="onSortChange()" [(ngModel)]="selectedSort">
 					<mat-option *ngFor="let sort of filters" [value]="sort.value">
-						{{sort.label}}
+						{{ sort.label }}
 					</mat-option>
 				</mat-select>
 				<button (click)="toggleIcon($event)" [matTooltip]="direction" mat-icon-button matSuffix>
-					<mat-icon>{{icon}}</mat-icon>
+					<mat-icon>{{direction === 'Ascending' ? 'south' : 'north'}}</mat-icon>
 				</button>
 			</mat-form-field>
 
-			<mat-button-toggle-group aria-label="Select view mode" name="viewToggle" value="grid">
+			<mat-button-toggle-group aria-label="Select view mode" name="viewToggle">
 				<mat-button-toggle routerLink="/search/list" routerLinkActive="mat-button-toggle-checked">
 					<mat-icon>apps</mat-icon>
 					Grid view
@@ -31,5 +33,5 @@
 		</div>
 
 		<router-outlet></router-outlet>
-	</mat-drawer-content>
-</mat-drawer-container>
+	</div>
+</div>

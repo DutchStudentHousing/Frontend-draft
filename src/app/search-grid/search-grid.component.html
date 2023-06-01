@@ -1,6 +1,67 @@
-<div class="mat-card-container">
-	<property *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" class="mat-card-item"></property>
+<div class="mat-card-container" id="results">
+	<ng-template #loading>
+		<div class="loading">
+			<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+		</div>
+	</ng-template>
+
+	<ng-container *ngIf="(properties | async) as propertyList; else loading">
+		<mat-card *ngFor="let property of propertyList" id="{{property.id}}">
+			<div class="card-header">
+				<mat-card-title [queryParams]="{ id: property.id }"
+					routerLink="/detail/">{{property.name}}</mat-card-title>
+				<mat-card-subtitle>
+					<span class="card-city">{{property.city}}</span>
+					<mat-divider [vertical]="true"></mat-divider>
+					<span class="card-type">{{property.type}}</span>
+					<mat-divider [vertical]="true"></mat-divider>
+					<span *ngIf="property.date_published" class="card-date">{{ property.date_published[2] }}
+						-{{ property.date_published[1] }}-{{ property.date_published[0]}}</span>
+				</mat-card-subtitle>
+			</div>
+			<div class="card-image">
+				<img (error)="handleImageError($event)" [queryParams]="{ id: property.id }" [src]="property.img" alt="{{property.name}}"
+					mat-card-image
+					routerLink="/detail/">
+			</div>
+			<mat-card-actions class="card-details">
+				<button mat-button matTooltip="Rent">
+					<mat-icon>payments</mat-icon>
+					€{{property.rent}}
+				</button>
+				<button mat-button>
+					<mat-icon>handyman</mat-icon>
+					{{property.rent_incl ? 'inc.' : 'exc.'}} utilities
+				</button>
+				<button mat-button matTooltip="Surface">
+					<mat-icon>grid_on</mat-icon>
+					{{property.sqm}}M²
+				</button>
+				<button mat-button>
+					<mat-icon>chair</mat-icon>
+					furnished
+				</button>
+				<button mat-button matTooltip="Rentable period">
+					<mat-icon>event_available</mat-icon>
+					01-01-2024 - 01-01-2025
+				</button>
+			</mat-card-actions>
+			<mat-divider></mat-divider>
+			<mat-card-actions>
+				<button mat-stroked-button>
+					<mat-icon>face</mat-icon>
+					Henk
+				</button>
+				<button [queryParams]="{ id: property.id }" mat-stroked-button routerLink="/detail/">
+					<mat-icon>open_in_new</mat-icon>
+					View property
+				</button>
+			</mat-card-actions>
+		</mat-card>
+	</ng-container>
 </div>
 
-<mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [showFirstLastButtons]="true"
-	aria-label="Select page"></mat-paginator>
+<mat-card class="paginator-container">
+	<mat-paginator (page)="onPageChange($event)" [length]="totalItems" [pageIndex]="pageIndex" [pageSizeOptions]="[6, 12, 24, 48]"
+		[pageSize]="pageSize" [showFirstLastButtons]="true"></mat-paginator>
+</mat-card>

@@ -2,8 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import {LocationDetails} from "./locationDetails";
-import {PropertyDetails} from "./propertyDetails"
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Property, PropertyDetails, PropertyService} from "../api";
+import {Observable, throwError} from "rxjs";
+import {catchError} from "rxjs/operators";
+import {Location} from '@angular/common';
 
 @Component({
 	selector: 'app-detail',
@@ -11,38 +14,13 @@ import {Router} from "@angular/router";
 	styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
-	// Property details
-	details: PropertyDetails = {
-		additionalCosts: 100,
-		address: "Laan Corpus den Hoorn 106",
-		bathroom: true,
-		city: "Groningen",
-		energyLabel: "A",
-		furnished: true,
-		internet: true,
-		kitchen: true,
-		living: true,
-		pets: false,
-		postalCode: "9728 JR",
-		propertyType: "studio",
-		publicationDate: new Date("2023-05-01"),
-		registrationCosts: 200,
-		rent: 1500,
-		rentableFrom: new Date("2023-06-01"),
-		rentableTo: new Date("2023-12-31"),
-		savings: 5000,
-		smoking: false,
-		surface: 100,
-		utilities: true,
-		matchDaytimeActivity: "test",
-		matchMinAge: 18,
-		matchMaxAge: 99,
-		matchLanguage: "Test",
-		matchGender: "male",
-		matchPeople: 5
-	};
+	id!: string;
+	details!: Observable<PropertyDetails>;
+	loading: boolean = false;
+	error!: string;
 
-	constructor(private router: Router) {
+	// Property details
+	constructor(private route: ActivatedRoute, private router: Router, private location: Location, private propertyService: PropertyService) {
 	}
 
 	// Nearby locations
@@ -218,91 +196,103 @@ export class DetailComponent implements OnInit {
 		}
 	];
 
-	mapInstance!: L.Map;
-
 	ngOnInit() {
-		if (!this.mapInstance) {
-			const map = L.map('map');
+		this.loading = true;
+		this.route.queryParams.subscribe(params => {
+			this.id = params['id'] || null;
+		});
 
-			L.tileLayer('https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-				attribution: '&copy; OpenStreetMap contributors'
-			}).addTo(map);
+		this.getDetails(this.id);
+	}
 
-			const markersLayer = new L.MarkerClusterGroup({
-				iconCreateFunction: (cluster) => {
-					const childMarkers = cluster.getAllChildMarkers();
-					const childColors = new Set(childMarkers.map(marker => this.nearbyLocations.find(location => location.latLng.equals(marker.getLatLng()))?.color ?? 'primary'));
-					const clusterColor = childColors.has('warn') ? 'warn' : 'primary';
-					const count = cluster.getChildCount();
+	afterViewInit() {
+		const map = L.map('map');
 
-					return L.divIcon({
-						html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${clusterColor} mat-mdc-button-base" title="${count} locations near each other"><span class="mdc-button__label">${count}</span></button>`,
-						className: 'custom-cluster-icon',
+		L.tileLayer('https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+			attribution: '&copy; OpenStreetMap contributors'
+		}).addTo(map);
+
+		const markersLayer = new L.MarkerClusterGroup({
+			iconCreateFunction: (cluster) => {
+				const childMarkers = cluster.getAllChildMarkers();
+				const childColors = new Set(childMarkers.map(marker => this.nearbyLocations.find(location => location.latLng.equals(marker.getLatLng()))?.color ?? 'primary'));
+				const clusterColor = childColors.has('warn') ? 'warn' : 'primary';
+				const count = cluster.getChildCount();
+
+				return L.divIcon({
+					html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${clusterColor} mat-mdc-button-base" title="${count} locations near each other"><span class="mdc-button__label">${count}</span></button>`,
+					className: 'custom-cluster-icon',
+					iconSize: [40, 40],
+					iconAnchor: [20, 40]
+				});
+			}
+		});
+
+		const markerLatLngs: L.LatLng[] = [];
+		const propertyLocation = this.nearbyLocations.find(
+			(location) => location.label === 'Property'
+		);
+
+		this.nearbyLocations.forEach((markerData) => {
+			const markerIcon = L.divIcon({
+				html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${markerData.color} mat-mdc-button-base" title="${markerData.label}"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">${markerData.icon}</mat-icon><span class="mdc-button__label"></span></button>`,
+				className: 'custom-marker-icon',
+				iconSize: [40, 40],
+				iconAnchor: [20, 40],
+			});
+			const leafletMarker = L.marker(markerData.latLng, {
+				icon: markerIcon,
+			});
+
+			markerData.marker = leafletMarker;
+			markersLayer.addLayer(leafletMarker);
+
+			if (propertyLocation && markerData.latLng.distanceTo(propertyLocation.latLng) <= 750) {
+				markerLatLngs.push(markerData.latLng);
+			}
+
+			leafletMarker.on('click', () => {
+				console.log('Marker clicked!', markerData);
+			});
+		});
+
+		map.addLayer(markersLayer);
+
+		// Fit the map to the marker bounds
+		const bounds = L.latLngBounds(markerLatLngs);
+		map.fitBounds(bounds, {padding: [40, 40]});
+
+		// Add current location
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					const currentLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+					const markerIcon = L.divIcon({
+						html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-accent mat-mdc-button-base" title="Current Location"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">my_location</mat-icon><span class="mdc-button__label"></span></button>`,
+						className: 'current-location-marker-icon',
 						iconSize: [40, 40],
 						iconAnchor: [20, 40]
 					});
-				}
-			});
+					const leafletMarker = L.marker(currentLatLng, {
+						icon: markerIcon
+					});
 
-			const markerLatLngs: L.LatLng[] = [];
-			const propertyLocation = this.nearbyLocations.find(
-				(location) => location.label === 'Property'
+					markersLayer.addLayer(leafletMarker);
+				},
+				(error) => console.error('Error retrieving current location:', error)
 			);
-
-			this.nearbyLocations.forEach((markerData) => {
-				const markerIcon = L.divIcon({
-					html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-${markerData.color} mat-mdc-button-base" title="${markerData.label}"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">${markerData.icon}</mat-icon><span class="mdc-button__label"></span></button>`,
-					className: 'custom-marker-icon',
-					iconSize: [40, 40],
-					iconAnchor: [20, 40],
-				});
-				const leafletMarker = L.marker(markerData.latLng, {
-					icon: markerIcon,
-				});
-
-				markerData.marker = leafletMarker;
-				markersLayer.addLayer(leafletMarker);
-
-				if (propertyLocation && markerData.latLng.distanceTo(propertyLocation.latLng) <= 750) {
-					markerLatLngs.push(markerData.latLng);
-				}
-
-				leafletMarker.on('click', () => {
-					console.log('Marker clicked!', markerData);
-				});
-			});
-
-			map.addLayer(markersLayer);
-
-			// Fit the map to the marker bounds
-			const bounds = L.latLngBounds(markerLatLngs);
-			map.fitBounds(bounds, {padding: [40, 40]});
-
-			// Add current location
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(
-					(position) => {
-						const currentLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
-						const markerIcon = L.divIcon({
-							html: `<button class="mdc-fab mdc-fab--mini mat-mdc-mini-fab mat-accent mat-mdc-button-base" title="Current Location"><mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">my_location</mat-icon><span class="mdc-button__label"></span></button>`,
-							className: 'current-location-marker-icon',
-							iconSize: [40, 40],
-							iconAnchor: [20, 40]
-						});
-						const leafletMarker = L.marker(currentLatLng, {
-							icon: markerIcon
-						});
-
-						markersLayer.addLayer(leafletMarker);
-					},
-					(error) => console.error('Error retrieving current location:', error)
-				);
-			} else {
-				console.error('Geolocation is not supported by this browser.');
-			}
-
-			this.mapInstance = map;
+		} else {
+			console.error('Geolocation is not supported by this browser.');
 		}
+	}
+
+	getDetails(id: string): void {
+		this.details = this.propertyService.propertyIdGet({id}).pipe(
+			catchError((error: any) => {
+				console.error(error);
+				return throwError('An error occurred while loading the properties.');
+			})
+		);
 	}
 
 	getNearest(type: string): LocationDetails[] {
@@ -338,6 +328,6 @@ export class DetailComponent implements OnInit {
 
 	// Navigate to section
 	navigateToAnchor(anchorId: string) {
-		this.router.navigate([], {fragment: anchorId});
+		this.router.navigate([], {fragment: anchorId, queryParamsHandling: 'merge'});
 	}
 }

@@ -1,5 +1,17 @@
-mat-drawer {
-	min-width: 340px;
+.page-search {
+	display: flex;
+	gap: 16px;
+	margin: 16px;
+	justify-content: space-between;
+	align-items: stretch;
+	height: 100%;
+}
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	align-items: stretch;
 }
 
 .search-header {
@@ -7,11 +19,21 @@ mat-drawer {
 	display: flex;
 	gap: 24px;
 	justify-content: space-between;
-	padding: 24px;
-	transition: max-height 225ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 24px;
 }
 
 h1 {
 	flex: 3;
 	margin: 0;
+}
+
+router-outlet {
+	display: none;
 }

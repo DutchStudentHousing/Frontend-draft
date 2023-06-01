@@ -2,11 +2,65 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	gap: 24px;
 	justify-content: center;
-	margin-bottom: 24px;
+	gap: 24px;
 }
 
-.mat-card-item {
-	max-width: 365px;
+.mat-card-container mat-card {
+	max-width: calc(25% - 24px);
+}
+
+.card-header {
+	padding: 16px;
+}
+
+mat-divider {
+	margin: 0 8px;
+}
+
+mat-card-title, .mat-mdc-card-image {
+	cursor: pointer;
+}
+
+mat-card-subtitle {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.card-image {
+	aspect-ratio: 3/2;
+	overflow: hidden;
+}
+
+.card-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.card-details {
+	flex-wrap: wrap;
+}
+
+.card-details button {
+	font-weight: 400;
+}
+
+mat-card-actions {
+	justify-content: space-between;
+}
+
+.loading {
+	width: 100%;
+	height: 100%;
+}
+
+.loading mat-progress-spinner {
+	margin: auto;
+	margin-bottom: 12px;
+}
+
+.paginator-container {
+	margin-top: 24px;
 }

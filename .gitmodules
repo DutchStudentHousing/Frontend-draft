@@ -1,0 +1,3 @@
+[submodule "API-spec"]
+	path = API-spec
+	url = https://github.com/DutchStudentHousing/API-spec.git
