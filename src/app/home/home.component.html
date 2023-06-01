@@ -1,27 +1,34 @@
 <div class="home-container">
-	<h1>Welcome to Dutch Student Housing, {{totalItems}} properties and counting!</h1>
+	<h1>Welcome to Dutch Student Housing<span *ngIf="totalItems">, {{totalItems}} properties and counting</span>!</h1>
 
 	<mat-card [formGroup]="search" class="search">
 		<div class="spacer"></div>
 
 		<mat-form-field>
 			<mat-label>Search for city or postal code</mat-label>
-			<input formControlName="query" matInput placeholder="Type here..." required type="search"/>
+			<input [matAutocomplete]="auto" formControlName="query" matInput placeholder="Type here..." required
+				type="search"/>
+			<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+				<mat-option *ngFor="let option of cities" [value]="option">
+					{{ option }}
+				</mat-option>
+			</mat-autocomplete>
 		</mat-form-field>
 
 		<mat-form-field>
 			<mat-label>min. Rent</mat-label>
-			<input [max]="search.value.maxRent" [min]="rent.limitMin" [step]="rent.step" formControlName="minRent"
-				matInput type="number"/>
+			<input (input)="updateRentInputs()" [max]="search.controls.maxRent.value" [min]="rent.limitMin"
+				[step]="rent.step" formControlName="minRent" matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
 
 		<mat-form-field>
 			<mat-label>max. Rent</mat-label>
-			<input [max]="rent.limitMax" [min]="search.value.minRent" [step]="rent.step" formControlName="maxRent"
-				matInput type="number"/>
+			<input (input)="updateRentInputs()" [max]="rent.limitMax" [min]="search.controls.minRent.value"
+				[step]="rent.step" formControlName="maxRent" matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
+
 
 		<button [disabled]="search.invalid"
 			[queryParams]="{ query: search.value.query, minRent: search.value.minRent, maxRent: search.value.maxRent }"

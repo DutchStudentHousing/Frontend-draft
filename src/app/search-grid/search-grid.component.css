@@ -64,3 +64,8 @@ mat-card-actions {
 .paginator-container {
 	margin-top: 24px;
 }
+
+.error button {
+	zoom: 1.5;
+	pointer-events: none;
+}

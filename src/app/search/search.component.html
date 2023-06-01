@@ -10,7 +10,7 @@
 
 			<mat-form-field>
 				<mat-label>Sort on...</mat-label>
-				<mat-select (ngModelChange)="onSortChange()" [(ngModel)]="selectedSort">
+				<mat-select (ngModelChange)="onSortChange($event)" [(ngModel)]="selectedSort">
 					<mat-option *ngFor="let sort of filters" [value]="sort.value">
 						{{ sort.label }}
 					</mat-option>
@@ -21,7 +21,7 @@
 			</mat-form-field>
 
 			<mat-button-toggle-group aria-label="Select view mode" name="viewToggle">
-				<mat-button-toggle routerLink="/search/list" routerLinkActive="mat-button-toggle-checked">
+				<mat-button-toggle routerLink="/search" routerLinkActive="mat-button-toggle-checked">
 					<mat-icon>apps</mat-icon>
 					Grid view
 				</mat-button-toggle>

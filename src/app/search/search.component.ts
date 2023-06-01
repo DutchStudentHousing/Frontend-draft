@@ -13,6 +13,7 @@ interface Sort {
 })
 export class SearchComponent {
 	selectedSort!: string;
+	direction = "Ascending";
 	filters: Sort[] = [
 		{value: 'name', label: 'Name'},
 		{value: 'type', label: 'Type'},
@@ -22,7 +23,6 @@ export class SearchComponent {
 		{value: 'rentSurface', label: 'Rent per square metre'},
 		{value: 'city', label: 'City'}
 	];
-	direction = "Ascending";
 
 	constructor(private route: ActivatedRoute, private router: Router) {
 	}
@@ -35,7 +35,8 @@ export class SearchComponent {
 		this.updateQueryParams();
 	}
 
-	onSortChange(): void {
+	onSortChange(event: string): void {
+		this.selectedSort = event;
 		this.updateQueryParams();
 	}
 

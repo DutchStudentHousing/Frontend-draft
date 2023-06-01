@@ -19,10 +19,6 @@ h1 {
 	padding: 24px;
 }
 
-.search mat-form-field, .search button {
-	zoom: 1.5;
-}
-
 .box-3 {
 	display: flex;
 	justify-content: space-evenly;

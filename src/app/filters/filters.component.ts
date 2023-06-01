@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
@@ -8,26 +8,36 @@ import {map, startWith} from 'rxjs/operators';
 import {Slider} from './slider';
 import {MiscService} from "../api";
 
+type CheckboxOptions = {
+	key: string;
+	label: string;
+	selected?: boolean;
+};
+
 @Component({
 	selector: 'app-filters',
 	styleUrls: ['./filters.component.css'],
 	templateUrl: './filters.component.html'
 })
-export class FiltersComponent implements OnInit {
-	propertyTypes: { key: string; label: string }[] = [
+export class FiltersComponent {
+	// Property types
+	propertyTypes: CheckboxOptions[] = [
 		{key: 'Room', label: 'Room'},
 		{key: 'Apartment', label: 'Apartment'},
 		{key: 'Studio', label: 'Studio'},
 		{key: 'AntiSquat', label: 'Anti-squat'},
 		{key: 'StudentResidence', label: 'Student residence'}
 	];
-	facilitiesRules: { key: string; label: string }[] = [
+
+	// Facilities and rules
+	facilitiesRules: CheckboxOptions[] = [
 		{key: 'furnished', label: 'Furnished'},
 		{key: 'internet', label: 'Internet included'},
 		{key: 'utilities', label: 'Utilities included'},
 		{key: 'pets', label: 'Pets allowed'},
 		{key: 'smoking', label: 'Smoking allowed'}
 	];
+
 	// Energy label input
 	energyLabels: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 
@@ -58,16 +68,13 @@ export class FiltersComponent implements OnInit {
 		}
 	];
 
-	propertyTypeFG: FormGroup = this.createFormGroup(this.propertyTypes);
-	facilitiesRulesFG: FormGroup = this.createFormGroup(this.facilitiesRules);
-
 	// Rent input
 	rent: Slider = {
 		step: 50,
 		limitMin: 50,
 		limitMax: 2500,
-		min: null,
-		max: null,
+		min: 50,
+		max: 2500,
 	};
 
 	// Surface input
@@ -75,9 +82,10 @@ export class FiltersComponent implements OnInit {
 		step: 5,
 		limitMin: 5,
 		limitMax: 100,
-		min: null,
-		max: null,
+		min: 5,
+		max: 100,
 	};
+
 	// City selector
 	separatorKeysCodes = [ENTER, COMMA];
 	selectedLabels: string[] = [];
@@ -91,25 +99,49 @@ export class FiltersComponent implements OnInit {
 	constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private miscService: MiscService) {
 	}
 
-	ngOnInit(): void {
-
-	}
-
 	// Receive values from query parameters
 	ngAfterViewInit(): void {
 		this.route.queryParamMap.subscribe((params: ParamMap) => {
 			const minRent = params.get('minRent');
 			const maxRent = params.get('maxRent');
+			const minSqm = params.get('minSqm');
+			const maxSqm = params.get('maxSqm');
+			const propertyTypes = params.get('type');
 
 			this.rent = {
 				...this.rent,
-				min: minRent ? parseInt(minRent, 10) : this.rent.min,
-				max: maxRent ? parseInt(maxRent, 10) : this.rent.max,
+				min: minRent ? parseInt(minRent, 10) : null,
+				max: maxRent ? parseInt(maxRent, 10) : null,
 			};
+
+			this.surface = {
+				...this.surface,
+				min: minSqm ? parseInt(minSqm, 10) : null,
+				max: maxSqm ? parseInt(maxSqm, 10) : null,
+			};
+
+			if (propertyTypes) {
+				const selectedPropertyTypes = propertyTypes.split(',');
+				this.propertyTypes.forEach(propertyType => {
+					propertyType.selected = selectedPropertyTypes.includes(propertyType.key);
+				});
+			}
 		});
 
 		this.miscService.getKnownValues().subscribe(
 			(response) => {
+				this.rent = {
+					...this.rent,
+					limitMin: response.minRent ?? 50,
+					limitMax: response.maxRent ?? 5000,
+				};
+
+				this.surface = {
+					...this.surface,
+					limitMin: response.minSqm ?? 5,
+					limitMax: response.maxSqm ?? 750,
+				};
+
 				if (response && response.cities) {
 					this.allCities = response.cities.sort();
 					this.filteredCities = this.citiesFormControl.valueChanges.pipe(
@@ -125,14 +157,9 @@ export class FiltersComponent implements OnInit {
 	}
 
 	// Check filter status
-	countEnabledCheckboxes = (formGroup: FormGroup): string => {
-		const enabledCount = Object.values(formGroup.value).filter((value) => value).length;
-		return enabledCount > 0 ? `${enabledCount} selected` : '';
-	};
-
-	allCheckboxesUnselected = (formGroup: FormGroup): boolean => {
-		const checkboxes = formGroup.controls;
-		return !Object.values<any>(checkboxes).some((control) => control.value);
+	countEnabledCheckboxes = (panel: CheckboxOptions[]): string => {
+		const enabledCount = panel.filter(option => option.selected).length;
+		return enabledCount === 0 ? '' : `${enabledCount} selected`;
 	};
 
 	countNumberOfCities = (): string => {
@@ -190,10 +217,6 @@ export class FiltersComponent implements OnInit {
 			newMax = newMin + step;
 		}
 
-		if (newMin === newMax) {
-			newMax += step;
-		}
-
 		panel.min = Math.max(newMin, limitMin);
 		panel.max = Math.min(newMax, limitMax);
 	};
@@ -203,12 +226,19 @@ export class FiltersComponent implements OnInit {
 		return this.allCities.filter((city) => !this.cities.includes(city) && city.toLowerCase().includes(filterValue)).sort();
 	}
 
-	private createFormGroup(options: { key: string; label: string }[]): FormGroup {
-		const formGroupConfig = options.reduce((controls: { [key: string]: any }, option) => {
-			controls[option.key] = this.formBuilder.control(false);
-			return controls;
-		}, {});
+	update(): void {
+		const selectedProperties = this.propertyTypes.filter(property => property.selected).map(property => property.key).join(',');
 
-		return this.formBuilder.group(formGroupConfig);
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				minRent: this.rent.min,
+				maxRent: this.rent.max,
+				minSqm: this.surface.min,
+				maxSqm: this.surface.max,
+				type: selectedProperties
+			},
+			queryParamsHandling: 'merge'
+		});
 	}
 }

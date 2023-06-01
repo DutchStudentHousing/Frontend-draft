@@ -1,11 +1,17 @@
 <div class="mat-card-container" id="results">
-	<ng-template #loading>
-		<div class="loading">
+	<ng-template #progress>
+		<div *ngIf="!error" class="loading">
 			<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+		</div>
+		<div *ngIf="error" class="error">
+			<button [matTooltip]="error" color="warn" mat-flat-button>
+				<mat-icon>warning</mat-icon>
+				An error occured
+			</button>
 		</div>
 	</ng-template>
 
-	<ng-container *ngIf="(properties | async) as propertyList; else loading">
+	<ng-container *ngIf="(properties | async) as propertyList; else progress">
 		<mat-card *ngFor="let property of propertyList" id="{{property.id}}">
 			<div class="card-header">
 				<mat-card-title [queryParams]="{ id: property.id }"
@@ -62,6 +68,7 @@
 </div>
 
 <mat-card class="paginator-container">
-	<mat-paginator (page)="onPageChange($event)" [length]="totalItems" [pageIndex]="pageIndex" [pageSizeOptions]="[6, 12, 24, 48]"
+	<mat-paginator (page)="onPageChange($event)" [length]="totalItems" [pageIndex]="pageIndex"
+		[pageSizeOptions]="[4, 8, 16, 24, 48]"
 		[pageSize]="pageSize" [showFirstLastButtons]="true"></mat-paginator>
 </mat-card>

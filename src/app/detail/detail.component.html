@@ -195,50 +195,6 @@
 					</div>
 				</div>
 			</mat-card>
-			<mat-card id="in-this-area">
-				<div class="card-header">
-					<mat-card-title>In this area</mat-card-title>
-				</div>
-				<mat-divider></mat-divider>
-				<div class="in-this-area">
-					<div [leafletOptions]="options" id="map" leaflet></div>
-					<mat-nav-list>
-						<ng-container *ngFor="let property of nearbyLocations">
-							<ng-container *ngIf="!(property.icon === 'school' || property.icon === 'shopping_cart')">
-								<mat-list-item id="{{property.label}}">
-									<mat-icon matListItemIcon>{{property.icon}}</mat-icon>
-									<span matListItemTitle>{{property.label}}</span>
-									<span *ngIf="property.label !== 'Property'" matListItemLine>
-										{{ calculateDistanceToProperty(property) }} m away
-										<span *ngIf="property.brand">({{property.brand}})</span>
-									</span>
-									<span *ngIf="property.label === 'Property'" matListItemLine>Click to locate</span>
-								</mat-list-item>
-							</ng-container>
-						</ng-container>
-						<ng-container *ngFor="let school of getNearest('school')">
-							<mat-list-item id="{{school.label}}">
-								<mat-icon matListItemIcon>school</mat-icon>
-								<span matListItemTitle>{{school.label}}</span>
-								<span *ngIf="school.label !== 'Property'"
-									matListItemLine>{{ calculateDistanceToProperty(school) }} m away</span>
-							</mat-list-item>
-						</ng-container>
-						<ng-container *ngFor="let supermarket of getNearest('shopping_cart')">
-							<mat-list-item id="{{supermarket.label}}">
-								<mat-icon matListItemIcon>shopping_cart</mat-icon>
-								<span matListItemTitle>{{supermarket.label}} ({{supermarket.brand}})</span>
-								<span matListItemLine>{{ calculateDistanceToProperty(supermarket) }} m away</span>
-							</mat-list-item>
-						</ng-container>
-						<mat-list-item>
-							<mat-icon matListItemIcon>my_location</mat-icon>
-							<span matListItemTitle>Current location</span>
-							<span>You are here!</span>
-						</mat-list-item>
-					</mat-nav-list>
-				</div>
-			</mat-card>
 			<mat-card id="nearby-properties">
 				<div class="card-header">
 					<mat-card-title>Other nearby properties</mat-card-title>

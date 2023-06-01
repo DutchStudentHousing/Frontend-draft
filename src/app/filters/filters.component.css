@@ -65,3 +65,8 @@ mat-slider {
 .full-width {
 	width: 100%;
 }
+
+.apply-changes {
+	margin-top: 12px;
+	width: 100%;
+}

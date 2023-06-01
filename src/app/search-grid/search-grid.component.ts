@@ -11,9 +11,11 @@ import {catchError} from 'rxjs/operators';
 })
 export class SearchGridComponent implements OnInit {
 	properties!: Observable<Property[]>;
-	pageSize = 0;
+	pageSize = 16;
 	pageIndex = 0;
 	totalItems: number | undefined = 0;
+	loading: boolean = false;
+	error!: string;
 
 	constructor(
 		private propertyService: PropertyService,
@@ -30,7 +32,9 @@ export class SearchGridComponent implements OnInit {
 			const sort = params['sort'] + "," + params['direction'];
 			this.pageIndex = page - 1;
 			this.pageSize = params['size'] || this.pageSize;
-			this.getProperties(page, this.pageSize, sort);
+			const minRent = params['minRent'];
+			const maxRent = params['maxRent'];
+			this.getProperties(page, this.pageSize, sort, minRent, maxRent);
 		});
 
 		// Fetch the total number of properties from the server
@@ -45,10 +49,12 @@ export class SearchGridComponent implements OnInit {
 	}
 
 	// Fetches the properties from the server based on the provided page, size, and sort parameters
-	getProperties(page: number, size: number, sort: string): void {
-		this.properties = this.propertyService.getProperties$Json({page, size, sort}).pipe(
+	getProperties(page: number, size: number, sort?: string, min?: number, max?: number): void {
+		this.loading = true;
+		this.properties = this.propertyService.getProperties$Json({page, size, sort, min, max}).pipe(
 			catchError((error: any) => {
 				console.error(error);
+				this.error = error;
 				return throwError('An error occurred while loading the properties.');
 			})
 		);
@@ -71,6 +77,6 @@ export class SearchGridComponent implements OnInit {
 			queryParamsHandling: 'merge'
 		});
 
-		this.getProperties(nextPage, event.pageSize, '');
+		this.getProperties(nextPage, event.pageSize);
 	}
 }
