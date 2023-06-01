@@ -49,6 +49,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ApiModule} from "./api";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 
+import { environment } from './../environments/environment';
+
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent, FooterComponent],
 	declarations: [
@@ -102,7 +104,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 		LeafletModule,
 		HttpClientModule,
 		MatProgressSpinnerModule,
-		ApiModule.forRoot({rootUrl: import.meta.env.NG_APP_ENV + '/api'}),
+		ApiModule.forRoot({rootUrl: environment.url + '/api'}),
 		MatProgressBarModule
 	],
 	providers: [

@@ -3,9 +3,10 @@
 	"version": "0.0.0",
 	"scripts": {
 		"ng": "ng",
-		"prestart": "npm run gen",
+		"config": "ts-node set-env.ts",
+		"prestart": "npm run config && npm run gen",
 		"start": "ng serve",
-		"prebuild": "npm run gen",
+		"prebuild": "npm run config && npm run gen",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
@@ -45,6 +46,9 @@
 		"karma-coverage": "~2.2.0",
 		"karma-jasmine": "~5.1.0",
 		"karma-jasmine-html-reporter": "~2.0.0",
-		"typescript": "~5.0.2"
+		"typescript": "~5.0.2",
+		"colors": "^1.1.2",
+        "dotenv": "^5.0.0",
+		"ts-node": "~5.0.1"
 	}
 }
