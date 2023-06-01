@@ -2,7 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService, Token} from '../api'
 
+
 import jwt_decode from 'jwt-decode';
+import {AuthService} from "../auth/auth.service";
 
 @Component({
 	selector: 'app-login',
@@ -17,7 +19,8 @@ export class LoginComponent implements OnInit {
 	});
 
 	constructor(private formBuilder: FormBuilder,
-				private accountService: AccountService) {
+				private accountService: AccountService,
+				private auth : AuthService) {
 	}
 
 	ngOnInit() {
@@ -40,12 +43,12 @@ export class LoginComponent implements OnInit {
 		}
 		this.accountService.login$Json({body: loginReq})
 			.subscribe((token: Token) => {
-				// console.log((token.token) ? jwt_decode(token.token) : "no token found")})
 				if(token.token !== undefined) {
-					localStorage.setItem('jwt', token.token);
+					this.auth.setToken(token.token);
 					console.log(jwt_decode(token.token));
+				} else {
+					console.log("couldn't log in!")
 				}
 			})
-		// console.log(loginReq)
 	}
 }
