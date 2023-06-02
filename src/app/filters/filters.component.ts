@@ -2,17 +2,12 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, ParamMap, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {Slider} from './slider';
 import {MiscService} from "../api";
-
-type CheckboxOptions = {
-	key: string;
-	label: string;
-	selected?: boolean;
-};
+import {CheckboxOptions} from "./checkboxOptions";
 
 @Component({
 	selector: 'app-filters',
@@ -71,10 +66,8 @@ export class FiltersComponent {
 	// Rent input
 	rent: Slider = {
 		step: 50,
-		limitMin: 50,
-		limitMax: 2500,
-		min: 50,
-		max: 2500,
+		limitMin: 0,
+		limitMax: 2500
 	};
 
 	// Surface input
@@ -107,16 +100,26 @@ export class FiltersComponent {
 			const minSqm = params.get('minSqm');
 			const maxSqm = params.get('maxSqm');
 			const propertyTypes = params.get('type');
+			const city = params.get('city');
+			if (city !== null) {
+				const cities = city.split(',');
+				cities.forEach(cityValue => {
+					if (!this.cities.includes(cityValue)) {
+						this.cities.push(cityValue);
+						this.citiesCount++;
+					}
+				});
+			}
 
 			this.rent = {
 				...this.rent,
-				min: minRent ? parseInt(minRent, 10) : null,
+				min: minRent ? parseInt(minRent, 10) : (maxRent ? 0 : null),
 				max: maxRent ? parseInt(maxRent, 10) : null,
 			};
 
 			this.surface = {
 				...this.surface,
-				min: minSqm ? parseInt(minSqm, 10) : null,
+				min: minSqm ? parseInt(minSqm, 10) : (maxSqm ? 0 : null),
 				max: maxSqm ? parseInt(maxSqm, 10) : null,
 			};
 
@@ -132,8 +135,8 @@ export class FiltersComponent {
 			(response) => {
 				this.rent = {
 					...this.rent,
-					limitMin: response.minRent ?? 50,
-					limitMax: response.maxRent ?? 5000,
+					limitMin: response.minRent ?? this.rent.limitMin,
+					limitMax: response.maxRent ?? this.rent.limitMax,
 				};
 
 				this.surface = {
@@ -171,12 +174,12 @@ export class FiltersComponent {
 
 		if (index >= 0) {
 			this.cities.splice(index, 1);
+			this.citiesCount--;
 		}
 
 		if (!this.allCities.includes(city)) {
 			this.allCities.push(city);
 			this.allCities.sort();
-			this.citiesCount--;
 			(this.citiesFormControl.valueChanges as Subject<any>).next(this.citiesFormControl.value);
 		}
 
@@ -203,22 +206,25 @@ export class FiltersComponent {
 
 	// Slider panels
 	updatePanel = (panel: any) => {
-		const {min, max, step, limitMin, limitMax} = panel;
+		let {min, max, step, limitMin, limitMax} = panel;
 
-		let newMin = Math.floor(min / step) * step;
-		let newMax = Math.floor(max / step) * step;
+		if (min === null && max === null) return;
 
-		if (newMax < newMin) {
-			newMin = newMax - step;
-		}
+		min = min !== null ? Number(min) : null;
+		max = max !== null ? Number(max) : null;
 
-		if (newMax - newMin < step) {
+		let newMin = min !== null ? Math.floor(min / step) * step : null;
+		let newMax = max !== null ? Math.floor(max / step) * step : null;
+
+		if (newMax !== null && newMin !== null && newMax < newMin) newMin = newMax - step;
+
+		if (newMax !== null && newMin !== null && newMax - newMin < step) {
 			newMin = Math.floor(newMin / step) * step;
 			newMax = newMin + step;
 		}
 
-		panel.min = Math.max(newMin, limitMin);
-		panel.max = Math.min(newMax, limitMax);
+		panel.min = newMin !== null && limitMin !== null ? Math.max(newMin, limitMin) : newMin;
+		panel.max = newMax !== null && limitMax !== null ? Math.min(newMax, limitMax) : newMax;
 	};
 
 	private filterCities(value: string | null): string[] {
@@ -227,18 +233,27 @@ export class FiltersComponent {
 	}
 
 	update(): void {
-		const selectedProperties = this.propertyTypes.filter(property => property.selected).map(property => property.key).join(',');
+		const selectedProperties = this.propertyTypes
+			.filter(property => property.selected)
+			.map(property => property.key)
+			.join(',');
 
-		this.router.navigate([], {
+		const queryParams: any = {
+			type: selectedProperties,
+			minRent: this.rent.min,
+			maxRent: this.rent.max,
+			minSqm: this.surface.min,
+			maxSqm: this.surface.max,
+			city: this.cities.length > 0 ? this.cities.join(',') : null,
+		};
+
+		const navigationExtras: NavigationExtras = {
 			relativeTo: this.route,
-			queryParams: {
-				minRent: this.rent.min,
-				maxRent: this.rent.max,
-				minSqm: this.surface.min,
-				maxSqm: this.surface.max,
-				type: selectedProperties
-			},
-			queryParamsHandling: 'merge'
-		});
+			queryParams,
+			queryParamsHandling: 'merge',
+			preserveFragment: true,
+		};
+
+		this.router.navigate([], navigationExtras);
 	}
 }

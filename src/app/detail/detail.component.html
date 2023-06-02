@@ -73,7 +73,7 @@
 						</div>
 						<div class="details-item">
 							<span class="details-icon"><button disabled mat-icon-button><mat-icon>savings</mat-icon></button></span>
-							<span class="details-label">Savings:</span>
+							<span class="details-label">Deposit:</span>
 							<span class="details-content">€</span>
 						</div>
 						<div class="details-item">
@@ -132,23 +132,16 @@
 							<span class="details-content"></span>
 						</div>
 						<div class="details-item">
-							<span class="details-icon"><button disabled mat-icon-button><mat-icon>pets</mat-icon></button></span>
-							<span class="details-label">Pets allowed:</span>
-							<span
-								class="details-content">{{detail.property_details_pets_allowed ? 'allowed' : 'not allowed'}}</span>
-						</div>
-						<div class="details-item">
-							<span class="details-icon"><button disabled mat-icon-button><mat-icon>smoking_rooms</mat-icon></button></span>
-							<span class="details-label">Smoking inside:</span>
-							<span
-								class="details-content">{{detail.property_details_smoking_allowed ? 'allowed' : 'not allowed'}}</span>
+							<span class="details-icon"><button disabled mat-icon-button><mat-icon>groups</mat-icon></button></span>
+							<span class="details-label">Number of roommates:</span>
+							<span class="details-content">{{detail.property_details_roommates}}</span>
 						</div>
 					</div>
 				</div>
 			</mat-card>
 			<mat-card class="image-container">
-				<img alt="Photo of a Shiba Inu" mat-card-image
-					[src]="detail.property_img">
+				<img (error)="handleImageError($event)" [alt]="detail.property_name" [src]="detail.property_img"
+					mat-card-image/>
 			</mat-card>
 			<mat-card id="description">
 				<div class="card-header">
@@ -166,11 +159,6 @@
 				<mat-divider></mat-divider>
 				<div class="property-details">
 					<div class="details-list">
-						<div class="details-item">
-							<span class="details-icon"><button disabled mat-icon-button><mat-icon>groups</mat-icon></button></span>
-							<span class="details-label">Number of people:</span>
-							<span class="details-content">{{detail.property_details_roommates}}</span>
-						</div>
 						<div class="details-item">
 							<span class="details-icon"><button disabled mat-icon-button><mat-icon>transgender</mat-icon></button></span>
 							<span class="details-label">Gender:</span>
@@ -192,20 +180,44 @@
 							<span class="details-label">Language:</span>
 							<span class="details-content"></span>
 						</div>
+						<div class="details-item">
+							<span class="details-icon"><button disabled mat-icon-button><mat-icon>pets</mat-icon></button></span>
+							<span class="details-label">Pets allowed:</span>
+							<span
+								class="details-content">{{detail.property_details_pets_allowed ? 'allowed' : 'not allowed'}}</span>
+						</div>
+						<div class="details-item">
+							<span class="details-icon"><button disabled mat-icon-button><mat-icon>smoking_rooms</mat-icon></button></span>
+							<span class="details-label">Smoking inside:</span>
+							<span
+								class="details-content">{{detail.property_details_smoking_allowed ? 'allowed' : 'not allowed'}}</span>
+						</div>
 					</div>
 				</div>
+			</mat-card>
+			<mat-card>
+				test
 			</mat-card>
 			<mat-card id="nearby-properties">
 				<div class="card-header">
 					<mat-card-title>Other nearby properties</mat-card-title>
 				</div>
 				<mat-divider></mat-divider>
-				<mat-card-actions align="end">
-					<button mat-stroked-button routerLink="/detail">
-						<mat-icon>place</mat-icon>
-						Show other nearby properties
-					</button>
-				</mat-card-actions>
+				<ng-template #loadingNearby>
+					<mat-progress-spinner></mat-progress-spinner>
+				</ng-template>
+				<div class="property-details">
+					<div class="details-list">
+						<ng-container *ngIf="nearbyProperties | async as properties; else loadingNearby">
+							<div (click)="navigateToProperty(property.id)" *ngFor="let property of properties"
+								class="details-item">
+								<span class="details-icon"><button disabled mat-icon-button><mat-icon>home</mat-icon></button></span>
+								<span class="details-label">{{property.name}}, {{property.city}}</span>
+								<span class="details-content">€{{property.rent}}</span>
+							</div>
+						</ng-container>
+					</div>
+				</div>
 			</mat-card>
 		</div>
 	</div>

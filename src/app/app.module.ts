@@ -106,7 +106,7 @@ import {AuthService} from "./auth/auth.service";
 		LeafletModule,
 		HttpClientModule,
 		MatProgressSpinnerModule,
-		ApiModule.forRoot({rootUrl: 'http://localhost:3001/api'}),
+		ApiModule.forRoot({rootUrl: '/api'}),
 		MatProgressBarModule
 	],
 	providers: [

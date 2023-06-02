@@ -21,8 +21,7 @@
 					<mat-divider [vertical]="true"></mat-divider>
 					<span class="card-type">{{property.type}}</span>
 					<mat-divider [vertical]="true"></mat-divider>
-					<span *ngIf="property.date_published" class="card-date">{{ property.date_published[2] }}
-						-{{ property.date_published[1] }}-{{ property.date_published[0]}}</span>
+					<span class="card-date">{{property.date_published}}</span>
 				</mat-card-subtitle>
 			</div>
 			<div class="card-image">

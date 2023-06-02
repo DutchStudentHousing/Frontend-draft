@@ -1,9 +1,9 @@
 <div class="filters-header">
 	<h2>Filters</h2>
 
-	<button (click)="update()" aria-label="Use my pre-defined filters" mat-icon-button
-		matTooltip="Use my pre-defined filters">
-		<mat-icon>auto_awesome</mat-icon>
+	<button aria-label="Remove all filters" mat-icon-button matTooltip="Remove all filters"
+		routerLink="/search">
+		<mat-icon>filter_alt_off</mat-icon>
 	</button>
 </div>
 
@@ -198,7 +198,9 @@
 	</mat-expansion-panel>
 </mat-accordion>
 
-<button (click)="update()" [disabled]="!(propertyTypeForm.dirty || rentForm.dirty || surfaceForm.dirty)" class="apply-changes"
+<button (click)="update()"
+	[disabled]="!(propertyTypeForm.dirty || rentForm.dirty || surfaceForm.dirty || citiesFormControl.touched)"
+	class="apply-changes"
 	color="primary"
 	mat-raised-button>Apply changes
 </button>
