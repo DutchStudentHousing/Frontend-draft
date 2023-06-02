@@ -35,7 +35,8 @@ export class SearchGridComponent implements OnInit {
 			const minRent = params['minRent'];
 			const maxRent = params['maxRent'];
 			const cities = Array.isArray(params['city']) ? params['city'] : [params['city']];
-			this.getProperties(page, this.pageSize, sort, minRent, maxRent, cities);
+			const decodedCities = cities.map(city => decodeURIComponent(city));
+			this.getProperties(page, this.pageSize, sort, minRent, maxRent, decodedCities);
 		});
 
 		// Fetch the total number of properties from the server
