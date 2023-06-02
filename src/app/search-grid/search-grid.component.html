@@ -21,7 +21,7 @@
 					<mat-divider [vertical]="true"></mat-divider>
 					<span class="card-type">{{property.type}}</span>
 					<mat-divider [vertical]="true"></mat-divider>
-					<span class="card-date">{{property.date_published}}</span>
+					<span class="card-date">{{property.date_published | date: 'longDate' }}</span>
 				</mat-card-subtitle>
 			</div>
 			<div class="card-image">
