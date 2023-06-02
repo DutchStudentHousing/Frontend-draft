@@ -34,8 +34,8 @@ export class SearchGridComponent implements OnInit {
 			this.pageSize = params['size'] || this.pageSize;
 			const minRent = params['minRent'];
 			const maxRent = params['maxRent'];
-			const city = params['city'];
-			this.getProperties(page, this.pageSize, sort, minRent, maxRent, city);
+			const cities = Array.isArray(params['city']) ? params['city'] : [params['city']];
+			this.getProperties(page, this.pageSize, sort, minRent, maxRent, cities);
 		});
 
 		// Fetch the total number of properties from the server
@@ -50,7 +50,7 @@ export class SearchGridComponent implements OnInit {
 	}
 
 	// Fetches the properties from the server based on the provided page, size, and sort parameters
-	getProperties(page: number, size: number, sort?: string, min?: number, max?: number, city?: string): void {
+	getProperties(page: number, size: number, sort?: string, min?: number, max?: number, city?: string[]): void {
 		this.loading = true;
 		this.properties = this.propertyService.getProperties$Json({page, size, sort, min, max, city}).pipe(
 			catchError((error: any) => {
