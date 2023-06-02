@@ -15,7 +15,7 @@ export class SearchComponent {
 	selectedSort!: string;
 	direction = "Ascending";
 	filters: Sort[] = [
-		{value: 'name', label: 'Name'}
+		{value: 'name', label: 'Name'},
 		{value: 'type', label: 'Type'},
 		{value: 'city', label: 'City'},
 		{value: 'date_published', label: 'Date added'},
