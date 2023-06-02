@@ -24,6 +24,8 @@
 		"@angular/platform-browser-dynamic": "^16.0.0",
 		"@angular/router": "^16.0.0",
 		"@asymmetrik/ngx-leaflet": "^16.0.1",
+		"@types/jwt-decode": "^3.1.0",
+		"jwt-decode": "^3.1.2",
 		"leaflet": "^1.9.3",
 		"leaflet.markercluster": "^1.5.3",
 		"ng-openapi-gen": "^0.24.1",
