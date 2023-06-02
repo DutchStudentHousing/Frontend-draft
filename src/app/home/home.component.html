@@ -4,36 +4,35 @@
 	<mat-card [formGroup]="search" class="search">
 		<div class="spacer"></div>
 
-		<mat-form-field>
-			<mat-label>Search for city or postal code</mat-label>
-			<input [matAutocomplete]="auto" formControlName="query" matInput placeholder="Type here..." required
-				type="search"/>
-			<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
-				<mat-option *ngFor="let option of cities" [value]="option">
-					{{ option }}
-				</mat-option>
-			</mat-autocomplete>
+		<mat-form-field floatLabel="auto">
+			<mat-label>City</mat-label>
+			<mat-select [disabled]="!cities" formControlName="query" multiple>
+				<mat-select-trigger>
+					{{ search.get('query')?.value?.[0] || '' }}
+					<span *ngIf="(search.get('query')?.value?.length || 0) > 1" class="example-additional-selection">
+        (+{{ (search.get('query')?.value?.length || 0) - 1 }} {{ (search.get('query')?.value?.length === 2) ? 'other' : 'others' }}
+						)
+      </span>
+				</mat-select-trigger>
+				<mat-option *ngFor="let option of cities | async" [value]="option">{{ option }}</mat-option>
+			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field floatLabel="auto">
 			<mat-label>min. Rent</mat-label>
 			<input (input)="updateRentInputs()" [max]="search.controls.maxRent.value" [min]="rent.limitMin"
 				[step]="rent.step" formControlName="minRent" matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field floatLabel="auto">
 			<mat-label>max. Rent</mat-label>
 			<input (input)="updateRentInputs()" [max]="rent.limitMax" [min]="search.controls.minRent.value"
 				[step]="rent.step" formControlName="maxRent" matInput type="number"/>
 			<span matTextPrefix>€&nbsp;</span>
 		</mat-form-field>
 
-
-		<button [disabled]="search.invalid"
-			[queryParams]="{ query: search.value.query, minRent: search.value.minRent, maxRent: search.value.maxRent }"
-			color="primary" mat-raised-button
-			routerLink="/search">
+		<button (click)="submit()" [disabled]="search.invalid" color="primary" mat-raised-button>
 			<mat-icon>search</mat-icon>
 			Search
 		</button>

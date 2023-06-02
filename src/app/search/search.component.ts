@@ -15,13 +15,13 @@ export class SearchComponent {
 	selectedSort!: string;
 	direction = "Ascending";
 	filters: Sort[] = [
-		{value: 'name', label: 'Name'},
+		{value: 'name', label: 'Name'}
 		{value: 'type', label: 'Type'},
-		{value: 'added', label: 'Date added'},
+		{value: 'city', label: 'City'},
+		{value: 'date_published', label: 'Date added'},
 		{value: 'rent', label: 'Rent per month'},
 		{value: 'sqm', label: 'Surface'},
-		{value: 'rentSurface', label: 'Rent per square metre'},
-		{value: 'city', label: 'City'}
+		{value: 'rentSurface', label: 'Rent per square metre'}
 	];
 
 	constructor(private route: ActivatedRoute, private router: Router) {
@@ -29,7 +29,7 @@ export class SearchComponent {
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(params => {
-			this.selectedSort = params['sort'] || 'city';
+			this.selectedSort = params['sort'] || 'rent';
 			this.direction = params['direction'] === 'ASC' ? 'Ascending' : 'Descending';
 		});
 		this.updateQueryParams();

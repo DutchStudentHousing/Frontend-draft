@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators, ValidatorFn} from "@angular/forms";
+import {FormControl, FormGroup, ValidatorFn} from "@angular/forms";
 import {Slider} from "../filters/slider";
 import {MiscService} from "../api";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {Observable, of} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
 	selector: 'app-home',
@@ -11,28 +12,24 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 })
 export class HomeComponent {
 	totalItems: number | undefined = 0;
-	cities: string[] | undefined = [];
+	cities: Observable<string[]> | undefined;
+
 	search = new FormGroup({
-		query: new FormControl(),
-		minRent: new FormControl('', Validators.required),
-		maxRent: new FormControl('', Validators.required)
+		query: new FormControl(''),
+		minRent: new FormControl(''),
+		maxRent: new FormControl('')
 	}, {
 		validators: [this.validateRentRange.bind(this) as ValidatorFn]
 	});
-
-	constructor(private miscService: MiscService) {
-	}
-
 	rent: Slider = {
 		step: 50,
-		limitMin: 50,
+		limitMin: 0,
 		limitMax: 5000,
 		min: null,
 		max: null
 	};
 
-	onOptionSelected(event: MatAutocompleteSelectedEvent) {
-		this.search.controls.query.setValue(event.option.value);
+	constructor(private router: Router, private miscService: MiscService) {
 	}
 
 	ngOnInit(): void {
@@ -40,7 +37,7 @@ export class HomeComponent {
 			response => {
 				if (response) {
 					this.totalItems = response.propertyCount;
-					this.cities = response.cities;
+					this.cities = response.cities ? of(response.cities.sort()) : undefined;
 					this.rent = {
 						...this.rent,
 						limitMin: response.minRent ?? 50,
@@ -55,8 +52,16 @@ export class HomeComponent {
 	}
 
 	updateRentInputs() {
-		const minRent = Number(this.search.controls.minRent.value);
-		const maxRent = Number(this.search.controls.maxRent.value);
+		const minRentValue = this.search.controls.minRent.value;
+		const maxRentValue = this.search.controls.maxRent.value;
+
+		if (minRentValue === '' || maxRentValue === '') {
+			// Handle empty fields
+			return;
+		}
+
+		const minRent = Number(minRentValue);
+		const maxRent = Number(maxRentValue);
 		const step = Number(this.rent.step);
 		const limitMin = Number(this.rent.limitMin);
 		const limitMax = Number(this.rent.limitMax);
@@ -72,6 +77,7 @@ export class HomeComponent {
 		}
 	}
 
+
 	validateRentRange(formGroup: FormGroup) {
 		const minRent = formGroup.get('minRent')?.value;
 		const maxRent = formGroup.get('maxRent')?.value;
@@ -84,5 +90,18 @@ export class HomeComponent {
 		}
 
 		return null;
+	}
+
+	submit() {
+		const cities = Object.values(this.search?.value?.query ?? {}).join(',');
+
+		this.router.navigate(['/search'], {
+			queryParams: {
+				city: cities || null,
+				minRent: this.search?.value?.minRent || null,
+				maxRent: this.search?.value?.maxRent || null
+			},
+			queryParamsHandling: 'merge'
+		});
 	}
 }
