@@ -1,5 +1,8 @@
 import {NgModule} from '@angular/core';
 
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {TokenInterceptor} from "./auth/token.interceptor";
+
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatBadgeModule} from "@angular/material/badge";
@@ -48,6 +51,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ApiModule} from "./api";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {AuthService} from "./auth/auth.service";
 
 @NgModule({
 	bootstrap: [MenuComponent, AppComponent, FooterComponent],
@@ -109,7 +113,13 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 		{
 			provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
 			useValue: {appearance: 'outline', floatLabel: 'always', subscriptSizing: 'dynamic'}
-		}
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: TokenInterceptor,
+			multi: true
+		},
+		AuthService
 	]
 })
 
