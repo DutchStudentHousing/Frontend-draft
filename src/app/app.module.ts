@@ -113,13 +113,13 @@ import {AuthService} from "./auth/auth.service";
 		{
 			provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
 			useValue: {appearance: 'outline', floatLabel: 'always', subscriptSizing: 'dynamic'}
-		},
-		{
-			provide: HTTP_INTERCEPTORS,
-			useClass: TokenInterceptor,
-			multi: true
-		},
-		AuthService
+		}//,
+		// {
+		// 	provide: HTTP_INTERCEPTORS,
+		// 	useClass: TokenInterceptor,
+		// 	multi: true
+		// },
+		// AuthService
 	]
 })
 
